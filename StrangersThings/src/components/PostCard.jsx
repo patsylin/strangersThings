@@ -63,10 +63,23 @@ export default function PostCard({ post, token }) {
         <button type="submit">Update</button>
       </form>
 
-      <button onClick={() => deletePost(loc.state.post._id, token)}>
-        Delete
-      </button>
-
+<button
+  onClick={async () => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this post?");
+    if (confirmDelete) {
+      const result = await deletePost(loc.state.post._id, token);
+      if (result?.success) {
+        alert("Post deleted successfully!");
+        nav("/posts");
+      } else {
+        alert("Failed to delete post.");
+      }
+    }
+  }}
+>
+  Delete
+</button>
+      
       <button onClick={() => nav(`/posts`)}>Back</button>
     </Fragment>
   );
