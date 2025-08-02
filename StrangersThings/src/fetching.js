@@ -48,7 +48,6 @@ export const login = async (username, password) => {
 export const fetchPosts = async () => {
   try {
     const response = await fetch(`${BASE_URL}/posts`);
-
     const result = await response.json();
     console.log(result);
     return result;
@@ -117,3 +116,6 @@ export const deletePost = async (postId, token) => {
     console.error(err);
   }
 };
+
+// ✅ Export BASE_URL so other files like PostCard.jsx can import it
+export { BASE_URL };
