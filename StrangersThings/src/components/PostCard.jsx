@@ -58,8 +58,8 @@ export default function PostCard({ post, token }) {
           value={price}
           onChange={(e) => setPrice(e.target.value)}
         />
-        {<input placeholder="location" value={location} onChange={(e) => setLocation(e.target.value)} /> }
-        {<input type='box' placeholder="willDeliver" value={willDeliver} onChange={(e) => setWillDeliver(e.target.checked)} /> }
+        <input placeholder="location" value={location} onChange={(e) => setLocation(e.target.value)} /> 
+        <label>Will Deliver?<input type="checkbox" checked={willDeliver} onChange={(e) => setWillDeliver(e.target.checked)}/></label> 
         <button type="submit">Update</button>
       </form>
 
