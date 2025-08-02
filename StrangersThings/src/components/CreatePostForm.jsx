@@ -33,35 +33,38 @@ export default function CreatePostForm({ setPosts, token }) {
 
   return (
     <>
-      <form onSubmit={submitHandler}>
-        <input
-          placeholder="title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-        <input
-          placeholder="description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
-        <input
-          placeholder="price"
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
-        />
-        <input
-          placeholder="location"
-          value={location}
-          onChange={(e) => setLocation(e.target.value)}
-        />
-        <input
-          type="checkbox"
-          placeholder="willDeliver"
-          value={willDeliver}
-          onChange={(e) => setWillDeliver(e.target.checked)}
-        />
-        <button type="submit">Create Post</button>
-      </form>
+  <form onSubmit={submitHandler}>
+  <input
+    placeholder="title"
+    value={title}
+    onChange={(e) => setTitle(e.target.value)}
+  />
+  <input
+    placeholder="description"
+    value={description}
+    onChange={(e) => setDescription(e.target.value)}
+  />
+  <input
+    placeholder="price"
+    value={price}
+    onChange={(e) => setPrice(e.target.value)}
+  />
+  <input
+    placeholder="location"
+    value={location}
+    onChange={(e) => setLocation(e.target.value)}
+  />
+  <label>
+    Will Deliver?
+    <input
+      type="checkbox"
+      checked={willDeliver}
+      onChange={(e) => setWillDeliver(e.target.checked)}
+    />
+  </label>
+  <button type="submit">Create Post</button>
+</form>
+
     </>
   );
 }
