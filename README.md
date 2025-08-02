@@ -1,13 +1,11 @@
-# Strangers' Things
+# Strangers Things
 
 🛍️ A not-so-spooky online marketplace!  
-Strangers' Things is a front-end React app that mimics Craigslist functionality, built using the Strangers' Things API from Fullstack Academy. 
-The name is a play on *Stranger Things* — but instead of monsters and Demogorgons, you'll find posts, messages, and tokens!
+Strangers Things is a front-end React app that mimics Craigslist functionality, built using the Stranger's Things API from Fullstack Academy. The name is a play on *Stranger Things* — but instead of monsters and Demogorgons, you'll find posts, messages, and tokens!
 
 ## 🌟 Purpose
 
-This project was created to build comfort with React, API integration, token-based authentication, and conditional 
-rendering—while having a little fun with naming along the way.
+This project was created to build comfort with React, API integration, token-based authentication, and conditional rendering—while having a little fun with naming along the way.
 
 ## 🛠️ Tech Stack
 
@@ -19,10 +17,10 @@ rendering—while having a little fun with naming along the way.
 
 ## ✨ Features
 
-- 📝 View marketplace listings
+- 📝 Browse all marketplace listings
 - 🔐 Register and log in with a token-based system
 - 🛍️ Create, edit, and delete your own posts (if logged in)
-- 💬 Send and receive messages through the platform
+- 💬 Send messages to other users via their posts
 - 🚦 Conditional UI based on login state
 
 ## 🚀 Getting Started
@@ -67,3 +65,5 @@ rendering—while having a little fun with naming along the way.
 ---
 
 **Note:** Built as part of the Grace Hopper Program at Fullstack Academy.
+
+
