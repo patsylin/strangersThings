@@ -1,0 +1,38 @@
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 2px solid #ccc;
+  background-color: #fefefe;
+}
+
+.site-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+.nav-links {
+  display: flex;
+  gap: 1rem;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: blue;
+  font-weight: 500;
+}
+
+.nav-links a:hover {
+  color: darkblue;
+}
+
+body {
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f0f0f0;
+  color: #333;
+  font-family: Arial, sans-serif;
+  padding: 0 1rem; /* ✅ This was floating before — now it's in the right spot */
+}
