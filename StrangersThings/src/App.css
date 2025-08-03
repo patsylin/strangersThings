@@ -1,12 +1,12 @@
 #root {
-  max-width: 1280px;
+  max-width: 960px;
   margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  padding: 1rem;
+  text-align: left;
+  font-family: sans-serif;
 }
 
-/* Logo animation and styling */
-.logo {
+/* .logo {
   height: 6em;
   padding: 1.5em;
   will-change: filter;
@@ -19,7 +19,7 @@
 
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
-}
+} */
 
 @keyframes logo-spin {
   from {
@@ -40,9 +40,9 @@
   padding: 2em;
 }
 
-.read-the-docs {
+/* .read-the-docs {
   color: #888;
-}
+} */
 
 /* Post card styling */
 .post-card {
@@ -74,14 +74,12 @@
   color: #0056b3;
 }
 
-/* Global layout and typography */
 body {
-  flex-direction: column;
-  min-height: 100vh;
-  background-color: #f0f0f0;
-  color: #333;
-  font-family: Arial, sans-serif;
-  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+  background-color: white;
+  color: #000;
+  font-family: sans-serif;
 }
 
 body > * {

@@ -1,16 +1,30 @@
-/* Global font */
-body {
-  font-family: "Courier New", Courier, monospace;
-  background-color: white;
-  color: black;
+/* Reset and base styles */
+* {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
-/* Links */
+body {
+  font-family: Arial, sans-serif;
+  background-color: white;
+  color: black;
+  line-height: 1.5;
+  padding: 20px;
+}
+
+/* Header styling */
+header {
+  text-align: center;
+  font-family: Georgia, serif;
+  font-size: 2.5rem;
+  margin: 1.5rem 0;
+}
+
+/* Link styling to match Craigslist */
 a {
-  color: blue;
-  text-decoration: underline;
+  color: #0000ee;
+  text-decoration: none;
 }
 
 a:visited {
@@ -21,28 +35,38 @@ a:hover {
   text-decoration: underline;
 }
 
-/* Header */
-header {
-  text-align: center;
-  font-family: Georgia, serif;
-  font-size: 2rem;
-  margin: 1.5rem 0;
-}
-
-/* Remove card-like styles */
-..post-card {
-  border: 1px solid #ccc;
-  padding: 1rem;
-  margin-bottom: 1rem;
-  background-color: #f9f9f9;
-}
-
-/* Section headers */
+/* Section headers like “For Sale”, “Posts”, etc */
 .section-title {
-  color: gray;
   text-transform: lowercase;
-  font-size: 1.1rem;
-  margin-top: 1rem;
+  color: gray;
+  font-size: 1.2rem;
+  margin-top: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Plain listing layout */
+.post-item {
+  margin: 0.5rem 0;
+}
+
+/* Optional: remove modern styles */
+button,
+input,
+select,
+textarea {
+  border: 1px solid #ccc;
+  padding: 0.25rem;
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+/* Hide any remaining card styles if you used them */
+.card {
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
+  padding: 0;
+  margin: 0;
 }
 
 /* :root {
