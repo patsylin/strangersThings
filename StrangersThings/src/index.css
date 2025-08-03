@@ -1,6 +1,6 @@
 /* Global font */
 body {
-  font-family: Arial, sans-serif;
+  font-family: "Courier New", Courier, monospace;
   background-color: white;
   color: black;
   margin: 0;
@@ -9,8 +9,8 @@ body {
 
 /* Links */
 a {
-  color: #0000ee;
-  text-decoration: none;
+  color: blue;
+  text-decoration: underline;
 }
 
 a:visited {
@@ -30,13 +30,11 @@ header {
 }
 
 /* Remove card-like styles */
-.card,
-.post {
-  border: none;
-  box-shadow: none;
-  border-radius: 0;
-  padding: 0;
-  margin-bottom: 0.5rem;
+..post-card {
+  border: 1px solid #ccc;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background-color: #f9f9f9;
 }
 
 /* Section headers */
