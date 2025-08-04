@@ -4,6 +4,9 @@ import { useNavigate } from "react-router-dom";
 export default function Messages({ token }) {
   const [messages, setMessages] = useState([]);
   const [username, setUsername] = useState("");
+  const [showReplyForm, setShowReplyForm] = useState({});
+  const [replyContent, setReplyContent] = useState({});
+  const [successMessage, setSuccessMessage] = useState("");
   const nav = useNavigate();
 
   useEffect(() => {
@@ -22,7 +25,7 @@ export default function Messages({ token }) {
 
         if (result?.data?.messages) {
           setMessages(result.data.messages);
-          setUsername(result.data.username); // Save current user's name
+          setUsername(result.data.username);
         } else {
           console.error("No messages found in response", result);
         }
@@ -40,9 +43,50 @@ export default function Messages({ token }) {
     (msg) => msg.fromUser?.username !== username
   );
 
+  const handleToggleReply = (messageId) => {
+    setShowReplyForm((prev) => ({
+      ...prev,
+      [messageId]: !prev[messageId],
+    }));
+  };
+
+  const handleSendReply = async (postId, messageId) => {
+    try {
+      const response = await fetch(
+        `https://strangers-things.herokuapp.com/api/2306-GHP-ET-WEB-FT/posts/${postId}/messages`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            message: {
+              content: replyContent[messageId],
+            },
+          }),
+        }
+      );
+      const result = await response.json();
+      if (result?.success) {
+        setSuccessMessage("Reply sent!");
+        setShowReplyForm((prev) => ({ ...prev, [messageId]: false }));
+        setReplyContent((prev) => ({ ...prev, [messageId]: "" }));
+        setTimeout(() => setSuccessMessage(""), 3000);
+      } else {
+        console.error("Failed to send reply", result);
+      }
+    } catch (err) {
+      console.error("Error sending reply:", err);
+    }
+  };
+
   return (
     <div style={{ padding: "2rem" }}>
       <h1 style={{ fontFamily: "sans-serif", color: "#333" }}>📬 Your Inbox</h1>
+      {successMessage && (
+        <p style={{ color: "green", marginBottom: "1rem" }}>{successMessage}</p>
+      )}
       {filteredMessages.length === 0 ? (
         <p style={{ color: "#888", fontStyle: "italic" }}>
           No messages from other users yet.
@@ -68,12 +112,9 @@ export default function Messages({ token }) {
             <p>
               <strong>Message:</strong> {message.content}
             </p>
+
             <button
-              onClick={() =>
-                nav(`/post/${message.post._id}`, {
-                  state: { post: message.post },
-                })
-              }
+              onClick={() => handleToggleReply(message._id)}
               style={{
                 marginTop: "0.5rem",
                 backgroundColor: "#ff7aa2",
@@ -84,8 +125,44 @@ export default function Messages({ token }) {
                 cursor: "pointer",
               }}
             >
-              Reply ✍️
+              {showReplyForm[message._id] ? "Cancel" : "Reply ✍️"}
             </button>
+
+            {showReplyForm[message._id] && (
+              <div style={{ marginTop: "1rem" }}>
+                <textarea
+                  rows={3}
+                  placeholder="Write your reply..."
+                  value={replyContent[message._id] || ""}
+                  onChange={(e) =>
+                    setReplyContent((prev) => ({
+                      ...prev,
+                      [message._id]: e.target.value,
+                    }))
+                  }
+                  style={{
+                    width: "100%",
+                    padding: "0.5rem",
+                    borderRadius: "6px",
+                    border: "1px solid #ccc",
+                    marginBottom: "0.5rem",
+                  }}
+                />
+                <button
+                  onClick={() => handleSendReply(message.post._id, message._id)}
+                  style={{
+                    backgroundColor: "#4CAF50",
+                    color: "white",
+                    border: "none",
+                    padding: "0.5rem 1rem",
+                    borderRadius: "6px",
+                    cursor: "pointer",
+                  }}
+                >
+                  Send Reply 💌
+                </button>
+              </div>
+            )}
           </div>
         ))
       )}
