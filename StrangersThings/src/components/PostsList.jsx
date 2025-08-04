@@ -8,7 +8,7 @@ export default function PostsList({ token }) {
 
   async function getPosts() {
     const p = await fetchPosts();
-    setPosts(p.data.posts);
+    setPosts(p.);
     return p.data.posts;
   }
 
