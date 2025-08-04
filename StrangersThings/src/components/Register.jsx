@@ -10,7 +10,7 @@ export default function Register({ setToken }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrorMessage("");
+    setErrorMessage(""); // clear old errors
 
     const register = await registerUser(username, password);
 

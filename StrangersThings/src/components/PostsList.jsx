@@ -8,10 +8,17 @@ export default function PostsList({ token }) {
   const [allPosts, setAllPosts] = useState([]);
 
   async function getPosts() {
-    const p = await fetchPosts();
-    if (Array.isArray(p)) {
-      setPosts(p);
-      setAllPosts(p);
+    try {
+      const p = await fetchPosts();
+      if (p && p.data && p.data.posts) {
+        setPosts(p.data.posts);
+        setAllPosts(p.data.posts);
+      } else {
+        console.warn("Unexpected post data:", p);
+      }
+      return p.data?.posts ?? [];
+    } catch (err) {
+      console.error("Error fetching posts:", err);
     }
   }
 
@@ -28,7 +35,7 @@ export default function PostsList({ token }) {
 
     if (filtered.length === 0) {
       setTimeout(() => {
-        console.log("No matches. Reloading.");
+        console.log(`No posts match "${query}". Reloading original post list.`);
         getPosts();
       }, 1000);
     }
