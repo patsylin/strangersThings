@@ -12,6 +12,17 @@ export default function Register({ setToken }) {
     e.preventDefault();
     setErrorMessage(""); // clear old errors
 
+    const isLongEnough = password.length >= 8;
+    const hasNumber = /\d/.test(password);
+    const noSpaces = !/\s/.test(password);
+
+    if (!isLongEnough || !hasNumber || !noSpaces) {
+      setErrorMessage(
+        "Password must be at least 8 characters, include a number, and contain no spaces."
+      );
+      return;
+    }
+
     const register = await registerUser(username, password);
 
     if (!register?.success) {
