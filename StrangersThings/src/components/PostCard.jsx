@@ -7,26 +7,33 @@ export default function PostCard({ post, token }) {
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [location, setLocation] = useState("");
-  const [willDeliver, setWillDeliver] = useState("");
+  const [willDeliver, setWillDeliver] = useState(false);
+  const [message, setMessage] = useState(""); // ✅ new controlled message state
 
   const nav = useNavigate();
   const loc = useLocation();
 
   useEffect(() => {
-    const { post } = loc.state;
-    setTitle(post.title);
-    setDescription(post.description);
-    setPrice(post.price);
-    setLocation(post.location);
-    setWillDeliver(post.willDeliver);
-  }, []);
+    const postData = post || loc.state?.post;
+    if (postData) {
+      setTitle(postData.title);
+      setDescription(postData.description);
+      setPrice(postData.price);
+      setLocation(postData.location);
+      setWillDeliver(postData.willDeliver);
+    }
+  }, [post, loc.state]);
 
   const submitHandler = (e) => {
     e.preventDefault();
 
     async function editPost() {
       const updatedPost = {
-        post: { title, description, price, location, willDeliver },
+        title,
+        description,
+        price,
+        location,
+        willDeliver,
       };
       const editedPost = await updatePost(
         loc.state.post._id,
@@ -79,7 +86,9 @@ export default function PostCard({ post, token }) {
 
       <button
         onClick={async () => {
-          const confirmDelete = window.confirm("Are you sure you want to delete this post?");
+          const confirmDelete = window.confirm(
+            "Are you sure you want to delete this post?"
+          );
           if (confirmDelete) {
             const result = await deletePost(loc.state.post._id, token);
             if (result?.success) {
@@ -103,7 +112,6 @@ export default function PostCard({ post, token }) {
           <form
             onSubmit={async (e) => {
               e.preventDefault();
-              const message = e.target.message.value;
               try {
                 const response = await fetch(
                   `${BASE_URL}/posts/${loc.state.post._id}/messages`,
@@ -123,7 +131,7 @@ export default function PostCard({ post, token }) {
                 const result = await response.json();
                 if (result.success) {
                   alert("Message sent!");
-                  e.target.reset();
+                  setMessage(""); // ✅ clear the input after success
                 } else {
                   alert("Message failed.");
                 }
@@ -137,10 +145,14 @@ export default function PostCard({ post, token }) {
               rows="4"
               cols="50"
               placeholder="Write your message here"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
               required
             />
             <br />
-            <button type="submit">Send Message</button>
+            <button type="submit" disabled={!message.trim()}>
+              Send Message
+            </button>
           </form>
         </>
       )}
