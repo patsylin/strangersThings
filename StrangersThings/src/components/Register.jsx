@@ -5,12 +5,13 @@ import { useNavigate } from "react-router-dom";
 export default function Register({ setToken }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false); // 👈 toggle state
   const [errorMessage, setErrorMessage] = useState("");
   const nav = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrorMessage(""); // clear old errors
+    setErrorMessage("");
 
     const isLongEnough = password.length >= 8;
     const hasNumber = /\d/.test(password);
@@ -43,15 +44,31 @@ export default function Register({ setToken }) {
       <form onSubmit={handleSubmit}>
         <input
           placeholder="username"
+          autoComplete="username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
+
         <input
           placeholder="password"
-          type="password"
+          type={showPassword ? "text" : "password"}
+          autoComplete="new-password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
+
+        {/* 👁️ Show/hide toggle */}
+        <label
+          style={{ fontSize: "0.85rem", display: "block", margin: "0.5em 0" }}
+        >
+          <input
+            type="checkbox"
+            checked={showPassword}
+            onChange={() => setShowPassword((prev) => !prev)}
+          />{" "}
+          Show password
+        </label>
+
         <button type="submit">Submit</button>
       </form>
 
