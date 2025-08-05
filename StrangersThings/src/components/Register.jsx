@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 export default function Register({ setToken }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false); // 👈 toggle state
+  const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const nav = useNavigate();
 
@@ -49,71 +49,42 @@ export default function Register({ setToken }) {
           onChange={(e) => setUsername(e.target.value)}
         />
 
-        <input
-          placeholder="password"
-          type={showPassword ? "text" : "password"}
-          autoComplete="new-password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-
-        {/* 👁️ Show/hide toggle */}
-        <label
-          style={{ fontSize: "0.85rem", display: "block", margin: "0.5em 0" }}
+        <div
+          style={{
+            position: "relative",
+            display: "flex",
+            alignItems: "center",
+            marginTop: "0.5rem",
+          }}
         >
           <input
-            type="checkbox"
-            checked={showPassword}
-            onChange={() => setShowPassword((prev) => !prev)}
-          />{" "}
-          Show password
-        </label>
+            placeholder="password"
+            type={showPassword ? "text" : "password"}
+            autoComplete="new-password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            style={{ flex: 1 }}
+          />
+          <span
+            onClick={() => setShowPassword((prev) => !prev)}
+            style={{
+              cursor: "pointer",
+              marginLeft: "0.5em",
+              userSelect: "none",
+              fontSize: "1.1em",
+            }}
+            title={showPassword ? "Hide password" : "Show password"}
+          >
+            {showPassword ? "🙈" : "👁️"}
+          </span>
+        </div>
 
-        <button type="submit">Submit</button>
+        <button type="submit" style={{ marginTop: "1rem" }}>
+          Submit
+        </button>
       </form>
 
       {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
     </>
   );
 }
-
-// import { useState } from "react";
-// import { registerUser } from "../fetching";
-// import { useNavigate } from "react-router-dom";
-
-// export default function Register({ setToken }) {
-//   const [username, setUsername] = useState("");
-//   const [password, setPassword] = useState("");
-//   const nav = useNavigate();
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     console.log(username, password);
-//     const register = await registerUser(username, password);
-//     setToken(register.data.token);
-//     console.log(register);
-//     setUsername("");
-//     setPassword("");
-//     nav("/posts");
-//   };
-
-//   return (
-//     <>
-//       <h1>Register</h1>
-
-//       <form onSubmit={handleSubmit}>
-//         <input
-//           placeholder="username"
-//           value={username}
-//           onChange={(e) => setUsername(e.target.value)}
-//         />
-//         <input
-//           placeholder="password"
-//           value={password}
-//           onChange={(e) => setPassword(e.target.value)}
-//         />
-//         <button type="submit">Submit</button>
-//       </form>
-//     </>
-//   );
-// }
