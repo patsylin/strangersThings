@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import Register from "./components/Register";
 import Login from "./components/Login";
 import PostsList from "./components/PostsList";
@@ -7,13 +7,26 @@ import PostCard from "./components/PostCard";
 import Messages from "./components/Messages";
 import Nav from "./components/Nav";
 import "./App.css";
-import { useLocation } from "react-router-dom";
 
 function App() {
   const [token, setToken] = useState(null);
   const [messageCount, setMessageCount] = useState(0);
-  const location = useLocation(); // <-- ADD THIS
+  const [username, setUsername] = useState("");
+  const location = useLocation();
 
+  // Load token and username from localStorage on mount
+  useEffect(() => {
+    const storedToken = localStorage.getItem("token");
+    const storedUsername = localStorage.getItem("username");
+    if (storedToken) {
+      setToken(storedToken);
+    }
+    if (storedUsername) {
+      setUsername(storedUsername);
+    }
+  }, []);
+
+  // Fetch messages and set username
   useEffect(() => {
     const fetchMessages = async () => {
       if (!token) return;
@@ -32,6 +45,9 @@ function App() {
 
         if (result?.data?.messages) {
           const user = result.data.username;
+          setUsername(user);
+          localStorage.setItem("username", user);
+
           const filteredMessages = result.data.messages.filter(
             (msg) => msg.fromUser?.username !== user
           );
@@ -45,15 +61,16 @@ function App() {
     fetchMessages();
   }, [token]);
 
+  // Reset message count when visiting the /messages page
   useEffect(() => {
     if (location.pathname === "/messages") {
-      setMessageCount(0); // <-- RESET BADGE HERE
+      setMessageCount(0);
     }
   }, [location]);
 
   return (
     <>
-      <Nav token={token} messageCount={messageCount} />
+      <Nav token={token} messageCount={messageCount} username={username} />
       <Routes>
         <Route path="/" element={<h1>Home</h1>} />
         <Route path="/register" element={<Register setToken={setToken} />} />
@@ -65,4 +82,3 @@ function App() {
     </>
   );
 }
-export default App;

@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import "./Nav.css";
 
-const Nav = ({ token, messageCount }) => {
+const Nav = ({ token, messageCount, username }) => {
   return (
     <header className="navbar">
       <h1 className="site-title">Strangers' Things</h1>
@@ -36,6 +36,21 @@ const Nav = ({ token, messageCount }) => {
                 </span>
               )}
             </Link>
+
+            {/* 🌟 Cute username badge */}
+            <span
+              style={{
+                marginLeft: "1rem",
+                fontFamily: "monospace",
+                color: "#444",
+                backgroundColor: "#eee",
+                padding: "0.2em 0.6em",
+                borderRadius: "12px",
+                fontSize: "0.85rem",
+              }}
+            >
+              ★ {username}
+            </span>
           </>
         )}
       </nav>
@@ -44,13 +59,3 @@ const Nav = ({ token, messageCount }) => {
 };
 
 export default Nav;
-
-// export default function Nav() {
-//   return (
-//     <nav>
-//       <Link to="/posts">See all posts</Link>
-//       <Link to="/login">Login</Link>
-//       <Link to="/register">Register</Link>
-//     </nav>
-//   );
-// }
