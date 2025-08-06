@@ -92,3 +92,33 @@ body > * {
 body > header {
   margin-top: 0;
 }
+.hero-monster {
+  max-width: 100%;
+  margin: 2rem auto;
+  display: block;
+  border-radius: 12px;
+}
+
+.mini-monster {
+  width: 120px;
+  height: auto;
+  margin: 0.5rem auto;
+  display: block;
+  border-radius: 12px;
+}
+
+.homepage-title {
+  font-family: Helvetica, Arial, sans-serif;
+  text-align: center;
+  font-size: 3rem;
+  margin-top: 1rem;
+  color: #444;
+}
+
+.header-title {
+  font-family: Helvetica, Arial, sans-serif;
+  text-align: center;
+  font-size: 1.5rem;
+  margin-top: 1rem;
+  color: #444;
+}
