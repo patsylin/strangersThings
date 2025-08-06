@@ -6,7 +6,6 @@ import PostsList from "./components/PostsList";
 import PostCard from "./components/PostCard";
 import Messages from "./components/Messages";
 import Nav from "./components/Nav";
-import monsterImage from "./assets/monster-homepage.png";
 import "./App.css";
 import { fetchUserData } from "./fetching";
 
@@ -45,7 +44,7 @@ function App() {
   return (
     <div>
       <img
-        src={monsterImage}
+        src="/monster-homepage.png"
         alt="Demogorgon browsing Strangers' Things"
         className={isHomePage ? "hero-monster" : "mini-monster"}
       />
