@@ -1,15 +1,16 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import "./Nav.css";
 
 const Nav = ({ token, messageCount, username, setToken }) => {
   const location = useLocation();
+  const nav = useNavigate();
   const currentPath = location.pathname;
 
   const handleLogout = () => {
     setToken(null);
     localStorage.removeItem("token");
     localStorage.removeItem("username");
-    window.location.href = "/";
+    nav("/"); // you'll need to call `useNavigate()` at the top of Nav
   };
 
   return (
