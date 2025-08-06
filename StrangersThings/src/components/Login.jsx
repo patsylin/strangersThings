@@ -27,7 +27,7 @@ export default function Login({ setToken }) {
 
   return (
     <>
-      <h1>Login</h1>
+      <h1 style={{ textAlign: "center" }}>Login</h1>
 
       <form
         onSubmit={handleSubmit}

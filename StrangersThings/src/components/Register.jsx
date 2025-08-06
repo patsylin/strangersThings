@@ -39,7 +39,7 @@ export default function Register({ setToken }) {
 
   return (
     <>
-      <h1>Register</h1>
+      <h1 style={{ textAlign: "center" }}>Register</h1>
 
       <form
         onSubmit={handleSubmit}
