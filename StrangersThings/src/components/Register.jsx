@@ -41,7 +41,16 @@ export default function Register({ setToken }) {
     <>
       <h1>Register</h1>
 
-      <form onSubmit={handleSubmit}>
+      <form
+        onSubmit={handleSubmit}
+        style={{
+          maxWidth: "400px",
+          margin: "0 auto",
+          display: "flex",
+          flexDirection: "column",
+          gap: "0.75rem",
+        }}
+      >
         <input
           placeholder="username"
           autoComplete="username"
@@ -49,29 +58,25 @@ export default function Register({ setToken }) {
           onChange={(e) => setUsername(e.target.value)}
         />
 
-        <div
-          style={{
-            position: "relative",
-            display: "flex",
-            alignItems: "center",
-            marginTop: "0.5rem",
-          }}
-        >
+        <div style={{ position: "relative" }}>
           <input
             placeholder="password"
             type={showPassword ? "text" : "password"}
             autoComplete="new-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            style={{ flex: 1 }}
+            style={{ width: "100%", paddingRight: "2rem" }}
           />
           <span
             onClick={() => setShowPassword((prev) => !prev)}
             style={{
+              position: "absolute",
+              right: "0.5rem",
+              top: "50%",
+              transform: "translateY(-50%)",
               cursor: "pointer",
-              marginLeft: "0.5em",
-              userSelect: "none",
               fontSize: "1.1em",
+              userSelect: "none",
             }}
             title={showPassword ? "Hide password" : "Show password"}
           >
@@ -79,9 +84,7 @@ export default function Register({ setToken }) {
           </span>
         </div>
 
-        <button type="submit" style={{ marginTop: "1rem" }}>
-          Submit
-        </button>
+        <button type="submit">Submit</button>
       </form>
 
       {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
