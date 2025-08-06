@@ -54,7 +54,7 @@ export const registerUser = async (username, password) => {
 // };
 
 // LOGIN
-export const login = async (username, password) => {
+export const loginUser = async (username, password) => {
   try {
     const response = await fetch(`${BASE_URL}/users/login`, {
       method: "POST",
