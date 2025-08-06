@@ -40,6 +40,35 @@ function App() {
     getMessages();
   }, [token, location]);
 
+  export const fetchUserData = async (token) => {
+    try {
+      const response = await fetch(`${BASE_URL}/users/me`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+export const fetchUserData = async (token) => {
+  try {
+    const response = await fetch(`${BASE_URL}/users/me`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    const result = await response.json();
+    if (!response.ok) {
+      throw new Error(result.error?.message || "Failed to fetch user data");
+    }
+    return result.data;
+  } catch (err) {
+    console.error("fetchUserData error:", err);
+    throw err;
+  }
+};
+
   return (
     <div>
       <Nav token={token} setToken={setToken} messageCount={messageCount} />
