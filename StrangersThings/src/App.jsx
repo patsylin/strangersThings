@@ -50,7 +50,7 @@ function App() {
       />
 
       <h1 className={isHomePage ? "homepage-title" : "header-title"}>
-        Strangers' Things
+        Strangers' Things!
       </h1>
 
       <Nav token={token} setToken={setToken} messageCount={messageCount} />
