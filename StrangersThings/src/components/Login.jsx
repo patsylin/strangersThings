@@ -1,27 +1,27 @@
 import { useState } from "react";
-import { login } from "../fetching";
+import { loginUser } from "../fetching";
 import { useNavigate } from "react-router-dom";
 
 export default function Login({ setToken }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const nav = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrorMessage(""); // Clear old errors
+    setErrorMessage("");
 
-    const result = await login(username, password);
+    const login = await loginUser(username, password);
 
-    if (!result.success) {
-      setErrorMessage(result.error?.message || "Login failed");
+    if (!login?.success) {
+      setErrorMessage(login?.error?.message || "Login failed");
       return;
     }
 
-    setToken(result.data.token);
-    setUsername("");
-    setPassword("");
+    setToken(login.data.token);
+    localStorage.setItem("token", login.data.token);
     nav("/posts");
   };
 
@@ -29,21 +29,49 @@ export default function Login({ setToken }) {
     <>
       <h1>Login</h1>
 
-      <form onSubmit={handleSubmit}>
+      <form
+        onSubmit={handleSubmit}
+        style={{
+          maxWidth: "400px",
+          margin: "0 auto",
+          display: "flex",
+          flexDirection: "column",
+          gap: "0.75rem",
+        }}
+      >
         <input
-          id="username"
-          autoFocus
           placeholder="username"
+          autoComplete="username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
-        <input
-          id="password"
-          placeholder="password"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+
+        <div style={{ position: "relative" }}>
+          <input
+            placeholder="password"
+            type={showPassword ? "text" : "password"}
+            autoComplete="current-password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            style={{ width: "100%", paddingRight: "2rem" }}
+          />
+          <span
+            onClick={() => setShowPassword((prev) => !prev)}
+            style={{
+              position: "absolute",
+              right: "0.5rem",
+              top: "50%",
+              transform: "translateY(-50%)",
+              cursor: "pointer",
+              fontSize: "1.1em",
+              userSelect: "none",
+            }}
+            title={showPassword ? "Hide password" : "Show password"}
+          >
+            {showPassword ? "🙈" : "👁️"}
+          </span>
+        </div>
+
         <button type="submit">Submit</button>
       </form>
 
