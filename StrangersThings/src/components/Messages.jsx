@@ -43,12 +43,30 @@ export default function Messages({ token }) {
     (msg) => msg.fromUser?.username !== username
   );
 
-  const handleToggleReply = (messageId) => {
-    setShowReplyForm((prev) => ({
-      ...prev,
-      [messageId]: !prev[messageId],
-    }));
-  };
+  <button onClick={() => handleToggleReply(message._id)}>
+    {showReplyForm[message._id] ? "Cancel Reply" : "Reply"}
+  </button>;
+
+  {
+    showReplyForm[message._id] && (
+      <div>
+        <textarea
+          rows="3"
+          value={replyContent[message._id] || ""}
+          onChange={(e) =>
+            setReplyContent((prev) => ({
+              ...prev,
+              [message._id]: e.target.value,
+            }))
+          }
+          placeholder="Write your reply..."
+        />
+        <button onClick={() => handleSendReply(message.post._id, message._id)}>
+          Send Reply
+        </button>
+      </div>
+    );
+  }
 
   const handleSendReply = async (postId, messageId) => {
     try {
