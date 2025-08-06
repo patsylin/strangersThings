@@ -156,6 +156,27 @@ export const deletePost = async (postId, token) => {
     console.error("Delete post error:", err);
   }
 };
+export const fetchUserData = async (token) => {
+  try {
+    const response = await fetch(`${BASE_URL}/users/me`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.error?.message || "Failed to fetch user data");
+    }
+
+    return result.data;
+  } catch (err) {
+    console.error("fetchUserData error:", err);
+    throw err;
+  }
+};
 
 // Export BASE_URL just in case
 export { BASE_URL };
