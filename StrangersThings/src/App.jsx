@@ -44,7 +44,7 @@ function App() {
   return (
     <div>
       <img
-        src="/monster-homepage.png"
+        src="/monster-image.jpg"
         alt="Demogorgon browsing Strangers' Things"
         className={isHomePage ? "hero-monster" : "mini-monster"}
       />
