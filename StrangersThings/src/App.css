@@ -94,10 +94,12 @@ body > header {
 }
 .hero-monster {
   display: block;
-  margin: 2rem auto;
+  margin: 1rem auto 0.5rem auto;
   width: 100%;
-  max-width: 600px; /* Keeps it proportional but not massive */
+  max-width: 720px; /* or 680px for a tighter look */
+  max-height: 280px; /* caps tallness */
   height: auto;
+  object-fit: contain; /* ensures full monster shows */
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
