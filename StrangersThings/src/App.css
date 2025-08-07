@@ -93,8 +93,8 @@ body > header {
   margin-top: 0;
 }
 .hero-monster {
-  width: 300px;
-  max-width: 80vw;
+  width: 100%;
+  max-width: 960px;
   margin: 2rem auto;
   display: block;
   border-radius: 12px;
