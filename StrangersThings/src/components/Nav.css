@@ -1,7 +1,7 @@
 nav {
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
+  align-items: center;
   padding: 0.5rem 1rem;
   background-color: white;
   border-bottom: 1px solid #ccc;
@@ -16,16 +16,21 @@ nav {
 
 .nav-links {
   display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.left-nav,
+.right-nav {
+  display: flex;
   gap: 1rem;
+  align-items: center;
 }
 
 .nav-links a {
   text-decoration: underline;
   color: #0066cc;
-}
-
-.nav-links a:hover {
-  color: #003366;
 }
 
 .nav-links a:hover {
@@ -38,5 +43,5 @@ body {
   background-color: #f0f0f0;
   color: #333;
   font-family: Arial, sans-serif;
-  padding: 0 1rem; /* ✅ This was floating before — now it's in the right spot */
+  padding: 0 1rem;
 }
