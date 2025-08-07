@@ -1,20 +1,53 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-export default function Messages({ messages = [], username }) {
+export default function Messages({ token }) {
+  const [messages, setMessages] = useState([]);
+  const [username, setUsername] = useState("");
   const [showReplyForm, setShowReplyForm] = useState({});
   const [replyContent, setReplyContent] = useState({});
   const [successMessage, setSuccessMessage] = useState("");
+  const nav = useNavigate();
+
+  useEffect(() => {
+    const fetchMessages = async () => {
+      try {
+        const response = await fetch(
+          "https://strangers-things.herokuapp.com/api/2306-GHP-ET-WEB-FT/users/me",
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        const result = await response.json();
+
+        if (result?.data?.messages) {
+          setMessages(result.data.messages);
+          setUsername(result.data.username);
+        } else {
+          console.error("No messages found in response", result);
+        }
+      } catch (err) {
+        console.error("Error fetching messages:", err);
+      }
+    };
+
+    if (token) {
+      fetchMessages();
+    }
+  }, [token]);
 
   const handleToggleReply = (messageId) => {
     setShowReplyForm((prev) => ({
       ...prev,
-      [messageId]: !prev[messageId],
+      [messageId]: !prev[messageId], // toggle true/false
     }));
   };
 
   const handleSendReply = async (postId, messageId) => {
     try {
-      const token = localStorage.getItem("token");
       const response = await fetch(
         `https://strangers-things.herokuapp.com/api/2306-GHP-ET-WEB-FT/posts/${postId}/messages`,
         {
