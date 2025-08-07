@@ -49,11 +49,17 @@ function App() {
         className={isHomePage ? "hero-monster" : "mini-monster"}
       />
 
+      {/* Optional title if you want it */}
       {/* <h1 className={isHomePage ? "homepage-title" : "header-title"}>
-        Strangers' Things!
+        Strangers' Things
       </h1> */}
 
-      <Nav token={token} setToken={setToken} messageCount={messageCount} />
+      <Nav
+        token={token}
+        setToken={setToken}
+        messageCount={messageCount}
+        username={username}
+      />
 
       <Routes>
         <Route path="/" element={<PostsList token={token} />} />
