@@ -1,75 +1,20 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
-export default function Messages({ token }) {
-  const [messages, setMessages] = useState([]);
-  const [username, setUsername] = useState("");
+export default function Messages({ messages = [], username }) {
   const [showReplyForm, setShowReplyForm] = useState({});
   const [replyContent, setReplyContent] = useState({});
   const [successMessage, setSuccessMessage] = useState("");
-  const nav = useNavigate();
 
-  useEffect(() => {
-    const fetchMessages = async () => {
-      try {
-        const response = await fetch(
-          "https://strangers-things.herokuapp.com/api/2306-GHP-ET-WEB-FT/users/me",
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        const result = await response.json();
-
-        if (result?.data?.messages) {
-          setMessages(result.data.messages);
-          setUsername(result.data.username);
-        } else {
-          console.error("No messages found in response", result);
-        }
-      } catch (err) {
-        console.error("Error fetching messages:", err);
-      }
-    };
-
-    if (token) {
-      fetchMessages();
-    }
-  }, [token]);
-
-  const filteredMessages = messages.filter(
-    (msg) => msg.fromUser?.username !== username
-  );
-
-  <button onClick={() => handleToggleReply(message._id)}>
-    {showReplyForm[message._id] ? "Cancel Reply" : "Reply"}
-  </button>;
-
-  {
-    showReplyForm[message._id] && (
-      <div>
-        <textarea
-          rows="3"
-          value={replyContent[message._id] || ""}
-          onChange={(e) =>
-            setReplyContent((prev) => ({
-              ...prev,
-              [message._id]: e.target.value,
-            }))
-          }
-          placeholder="Write your reply..."
-        />
-        <button onClick={() => handleSendReply(message.post._id, message._id)}>
-          Send Reply
-        </button>
-      </div>
-    );
-  }
+  const handleToggleReply = (messageId) => {
+    setShowReplyForm((prev) => ({
+      ...prev,
+      [messageId]: !prev[messageId],
+    }));
+  };
 
   const handleSendReply = async (postId, messageId) => {
     try {
+      const token = localStorage.getItem("token");
       const response = await fetch(
         `https://strangers-things.herokuapp.com/api/2306-GHP-ET-WEB-FT/posts/${postId}/messages`,
         {
@@ -98,6 +43,10 @@ export default function Messages({ token }) {
       console.error("Error sending reply:", err);
     }
   };
+
+  const filteredMessages = messages.filter(
+    (msg) => msg.fromUser?.username !== username
+  );
 
   return (
     <div style={{ padding: "2rem" }}>

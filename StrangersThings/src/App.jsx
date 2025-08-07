@@ -49,9 +49,9 @@ function App() {
         className={isHomePage ? "hero-monster" : "mini-monster"}
       />
 
-      <h1 className={isHomePage ? "homepage-title" : "header-title"}>
+      {/* <h1 className={isHomePage ? "homepage-title" : "header-title"}>
         Strangers' Things!
-      </h1>
+      </h1> */}
 
       <Nav token={token} setToken={setToken} messageCount={messageCount} />
 
