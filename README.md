@@ -55,16 +55,16 @@ This project was created to build comfort with React, API integration, token-bas
 ## 📸 Screenshots
 
 ### 🏠 Landing Page
-<img src="screenshots/landing.png" alt="Landing Page" width="700">
+![Landing](screenshots/landing.png)
 
 ### 🔐 Login Page
-<img src="screenshots/login.png" alt="Login Page" width="700">
+![Login](screenshots/login.png)
 
 ### 📬 Messages Inbox
-<img src="screenshots/messages.png" alt="Messages Inbox" width="700">
+![Messages](screenshots/messages.png)
 
 ### 📋 Posts List
-<img src="screenshots/posts.png" alt="Posts List" width="700">
+![Posts](screenshots/posts.png)
 
 
 ## 🤝 Contributors
