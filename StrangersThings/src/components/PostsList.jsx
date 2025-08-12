@@ -1,24 +1,31 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import Post from "./Post";
 import CreatePostForm from "./CreatePostForm";
 import { fetchPosts } from "../fetching";
 
 export default function PostsList({ token }) {
-  const [posts, setPosts] = useState([]);
   const [allPosts, setAllPosts] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [err, setErr] = useState("");
 
   async function getPosts() {
     try {
-      const p = await fetchPosts(); // returns an array of posts
-      if (Array.isArray(p)) {
-        setPosts(p);
-        setAllPosts(p);
-      } else {
+      setLoading(true);
+      setErr("");
+      const p = await fetchPosts(); // expect array, but normalize either way
+      const postsArray = Array.isArray(p) ? p : p?.data?.posts ?? [];
+      if (!Array.isArray(postsArray)) {
         console.warn("Unexpected post data:", p);
+        setAllPosts([]);
+      } else {
+        setAllPosts(postsArray);
       }
-      return p;
-    } catch (err) {
-      console.error("Error fetching posts:", err);
+    } catch (e) {
+      console.error("Error fetching posts:", e);
+      setErr("Could not load posts. Please try again.");
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -26,149 +33,82 @@ export default function PostsList({ token }) {
     getPosts();
   }, []);
 
-  const search = (query) => {
-    const filtered = allPosts.filter((post) =>
-      post.title.toLowerCase().includes(query.toLowerCase())
-    );
-
-    setPosts(filtered);
-
-    if (filtered.length === 0) {
-      setTimeout(() => {
-        console.log("No matches. Reloading.");
-        getPosts();
-      }, 1000);
-    }
-
-    return filtered;
-  };
+  const visiblePosts = useMemo(() => {
+    const q = searchTerm.trim().toLowerCase();
+    if (!q) return allPosts;
+    return allPosts.filter((post) => {
+      const title = post.title?.toLowerCase() ?? "";
+      const desc = post.description?.toLowerCase() ?? "";
+      const author = post.author?.username?.toLowerCase() ?? "";
+      return title.includes(q) || desc.includes(q) || author.includes(q);
+    });
+  }, [allPosts, searchTerm]);
 
   return (
-    <>
-      <h1>Posts List</h1>
-      <input
-        placeholder="search by title here"
-        onChange={(e) => search(e.target.value)}
-      />
-      <CreatePostForm setPosts={setPosts} token={token} />
-      {posts.length > 0 ? (
-        posts.map((post) => <Post key={post._id} post={post} token={token} />)
-      ) : (
-        <p>No posts found.</p>
+    <div style={{ maxWidth: 960, margin: "0 auto", padding: "1rem" }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: ".75rem",
+          marginBottom: ".75rem",
+        }}
+      >
+        <input
+          placeholder="search title/description/author"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          style={{ flex: 1, padding: ".5rem .6rem", border: "1px solid #ccc" }}
+        />
+        <button
+          onClick={() => setSearchTerm("")}
+          style={{
+            padding: ".5rem .75rem",
+            border: "1px solid #ccc",
+            background: "#fff",
+            cursor: "pointer",
+          }}
+        >
+          Reset
+        </button>
+      </div>
+
+      {token && (
+        <div style={{ marginBottom: "1rem" }}>
+          <CreatePostForm
+            setPosts={(newList) => setAllPosts(newList)}
+            token={token}
+          />
+        </div>
       )}
-    </>
+
+      {loading && <p>Loading posts…</p>}
+      {err && !loading && <p>{err}</p>}
+
+      {!loading && !err && visiblePosts.length === 0 && (
+        <div>
+          <p>No posts found.</p>
+          <button
+            onClick={getPosts}
+            style={{
+              padding: ".4rem .7rem",
+              border: "1px solid #ccc",
+              background: "#fff",
+              cursor: "pointer",
+            }}
+          >
+            Reload
+          </button>
+        </div>
+      )}
+
+      {!loading && !err && visiblePosts.length > 0 && (
+        <div style={{ display: "grid", gap: ".75rem" }}>
+          {visiblePosts.map((post) => (
+            <Post key={post._id || post.id} post={post} token={token} />
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
-
-// import { useEffect, useState } from "react";
-// import Post from "./Post";
-// import CreatePostForm from "./CreatePostForm";
-// import { fetchPosts } from "../fetching";
-
-// export default function PostsList({ token }) {
-//   const [posts, setPosts] = useState([]);
-//   const [allPosts, setAllPosts] = useState([]);
-
-//   async function getPosts() {
-//     try {
-//       const p = await fetchPosts();
-//       if (p && p.data && p.data.posts) {
-//         setPosts(p.data.posts);
-//         setAllPosts(p.data.posts);
-//       } else {
-//         console.warn("Unexpected post data:", p);
-//       }
-//       return p.data?.posts ?? [];
-//     } catch (err) {
-//       console.error("Error fetching posts:", err);
-//     }
-//   }
-
-//   useEffect(() => {
-//     getPosts();
-//   }, []);
-
-//   const search = (query) => {
-//     const filtered = allPosts.filter((post) =>
-//       post.title.toLowerCase().includes(query.toLowerCase())
-//     );
-
-//     setPosts(filtered);
-
-//     if (filtered.length === 0) {
-//       setTimeout(() => {
-//         console.log(`No posts match "${query}". Reloading original post list.`);
-//         getPosts();
-//       }, 1000);
-//     }
-
-//     return filtered;
-//   };
-
-//   return (
-//     <>
-//       <h1>Posts List</h1>
-//       <input
-//         placeholder="search by title here"
-//         onChange={(e) => search(e.target.value)}
-//       />
-//       <CreatePostForm setPosts={setPosts} token={token} />
-//       {posts.map((post) => (
-//         <Post key={post._id} post={post} token={token} />
-//       ))}
-//     </>
-//   );
-// }
-
-// // import { useEffect, useState } from "react";
-// // import Post from "./Post";
-// // import CreatePostForm from "./CreatePostForm";
-// // import { fetchPosts } from "../fetching";
-
-// // export default function PostsList({ token }) {
-// //   const [posts, setPosts] = useState([{ id: 1, title: "Example Post" }]);
-
-// //   async function getPosts() {
-// //     const p = await fetchPosts();
-// //     setPosts(p.);
-// //     return p.data.posts;
-// //   }
-
-// //   useEffect(() => {
-// //     getPosts();
-// //   }, []);
-
-// //   const search = (query) => {
-// //     console.log(query);
-// //     const filtered = posts.filter((post) => {
-// //       return post.title === query || post.title.includes(query);
-// //     });
-
-// //     setPosts(filtered);
-
-// //     if (filtered.length === 0) {
-// //       setTimeout(() => {
-// //         console.log("Did not find any matches, reloading");
-// //         getPosts();
-// //       }, 500);
-// //     }
-
-// //     return filtered;
-// //   };
-
-// //   return (
-// //     <>
-// //       <h1>Posts List</h1>
-// //       <input
-// //         placeholder="search by title here"
-// //         onChange={(e) => {
-// //           search(e.target.value);
-// //         }}
-// //       />
-// //       <CreatePostForm setPosts={setPosts} token={token} />
-// //       {posts.map((post) => {
-// //         return <Post key={post.id} post={post} token={token} />;
-// //       })}
-// //     </>
-// //   );
-// // }
