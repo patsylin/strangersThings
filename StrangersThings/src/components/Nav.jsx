@@ -9,16 +9,17 @@ export default function Nav({ token, setToken, messageCount, username }) {
     setToken(null);
     localStorage.removeItem("token");
     localStorage.removeItem("username");
-    nav("/posts");
+    nav("/"); // send to landing
   };
 
   return (
     <header className="nav-wrapper">
       <div className="nav-inner">
         {/* Left side */}
+
         <Link
           to="/posts"
-          className={location.pathname === "/posts" ? "active" : ""}
+          className={currentPath.startsWith("/posts") ? "active" : ""}
         >
           Strangers' Things
         </Link>

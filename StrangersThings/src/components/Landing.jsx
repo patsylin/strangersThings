@@ -3,8 +3,14 @@ import { useState } from "react";
 
 export default function Landing() {
   const nav = useNavigate();
-  const goToApp = () => nav("/posts");
-  const [ready, setReady] = useState(false);
+  const [ready, setReady] = useState(false); // fade/blur IN
+  const [leaving, setLeaving] = useState(false); // fade OUT
+
+  const goToApp = () => {
+    if (leaving) return;
+    setLeaving(true); // start fade-out
+    setTimeout(() => nav("/posts"), 600); // navigate after animation
+  };
 
   return (
     <main
@@ -34,14 +40,20 @@ export default function Landing() {
           overflow: "hidden",
           background: "#fff",
           boxShadow: "0 10px 24px rgba(0,0,0,0.12)",
-          opacity: ready ? 1 : 0,
-          transform: ready ? "scale(1)" : "scale(0.985)",
-          transition: "opacity 600ms ease-out, transform 600ms ease-out",
+          // container fade/scale in; fade out on leave
+          opacity: leaving ? 0 : ready ? 1 : 0,
+          transform: leaving
+            ? "scale(0.99)"
+            : ready
+            ? "scale(1)"
+            : "scale(0.985)",
+          transition: "opacity 300ms ease-out, transform 300ms ease-out",
           willChange: "opacity, transform",
+          pointerEvents: leaving ? "none" : "auto",
         }}
       >
         <img
-          src="/monster image.jpg" // file must exist in /public
+          src="/monster image.jpg"
           alt="Enter Strangers' Things"
           loading="eager"
           decoding="async"
@@ -51,6 +63,7 @@ export default function Landing() {
             display: "block",
             width: "100%",
             height: "auto",
+            // blur-in (with tiny delay) while loading
             filter: ready ? "blur(0px)" : "blur(8px)",
             transition: "filter 600ms ease-out",
             transitionDelay: ready ? "80ms" : "0ms",

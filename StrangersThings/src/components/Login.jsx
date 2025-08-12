@@ -1,81 +1,63 @@
 import { useState } from "react";
-import { loginUser } from "../fetching";
 import { useNavigate } from "react-router-dom";
+import { loginUser, fetchUserData } from "../fetching"; // adjust names if different
 
-export default function Login({ setToken }) {
-  const [username, setUsername] = useState("");
+export default function Login({ setToken, setUsername }) {
+  const [usernameInput, setUsernameInput] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [err, setErr] = useState("");
   const nav = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
-    setErrorMessage("");
+    setErr("");
 
-    const login = await loginUser(username, password);
+    try {
+      const res = await loginUser(usernameInput, password);
+      const token = res?.data?.token || res?.token; // handle either shape
+      if (!token) throw new Error("Login failed.");
 
-    if (!login?.success) {
-      setErrorMessage(login?.error?.message || "Login failed");
-      return;
+      // set state FIRST for instant UI update
+      setToken(token);
+      localStorage.setItem("token", token);
+
+      // get username (if login API didn’t return it)
+      const me = await fetchUserData(token).catch(() => null);
+      const uname =
+        me?.username ||
+        me?.data?.username ||
+        res?.data?.user?.username ||
+        usernameInput;
+
+      setUsername(uname);
+      localStorage.setItem("username", uname);
+
+      nav("/posts"); // jump right into the app
+    } catch (e2) {
+      console.error(e2);
+      setErr(e2.message || "Login failed.");
     }
-
-    setToken(login.data.token);
-    localStorage.setItem("token", login.data.token);
-    nav("/posts");
   };
 
   return (
-    <>
-      <h1 style={{ textAlign: "center" }}>Login</h1>
-
-      <form
-        onSubmit={handleSubmit}
-        style={{
-          maxWidth: "400px",
-          margin: "0 auto",
-          display: "flex",
-          flexDirection: "column",
-          gap: "0.75rem",
-        }}
-      >
-        <input
-          placeholder="username"
-          autoComplete="username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-
-        <div style={{ position: "relative" }}>
-          <input
-            placeholder="password"
-            type={showPassword ? "text" : "password"}
-            autoComplete="current-password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            style={{ width: "100%", paddingRight: "2rem" }}
-          />
-          <span
-            onClick={() => setShowPassword((prev) => !prev)}
-            style={{
-              position: "absolute",
-              right: "0.5rem",
-              top: "50%",
-              transform: "translateY(-50%)",
-              cursor: "pointer",
-              fontSize: "1.1em",
-              userSelect: "none",
-            }}
-            title={showPassword ? "Hide password" : "Show password"}
-          >
-            {showPassword ? "🙈" : "👁️"}
-          </span>
-        </div>
-
-        <button type="submit">Submit</button>
-      </form>
-
-      {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
-    </>
+    <form
+      onSubmit={onSubmit}
+      style={{ display: "grid", gap: ".5rem", maxWidth: 480 }}
+    >
+      <input
+        placeholder="username"
+        value={usernameInput}
+        onChange={(e) => setUsernameInput(e.target.value)}
+        autoFocus
+      />
+      <input
+        placeholder="password"
+        type="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      <button type="submit">Login</button>
+      {err && <p style={{ color: "crimson", margin: 0 }}>{err}</p>}
+    </form>
   );
 }

@@ -1,93 +1,63 @@
 import { useState } from "react";
-import { registerUser } from "../fetching";
 import { useNavigate } from "react-router-dom";
+import { registerUser, fetchUserData } from "../fetching"; // adjust names if different
 
-export default function Register({ setToken }) {
-  const [username, setUsername] = useState("");
+export default function Register({ setToken, setUsername }) {
+  const [usernameInput, setUsernameInput] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [err, setErr] = useState("");
   const nav = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
-    setErrorMessage("");
+    setErr("");
 
-    const isLongEnough = password.length >= 8;
-    const hasNumber = /\d/.test(password);
-    const noSpaces = !/\s/.test(password);
+    try {
+      const res = await registerUser(usernameInput, password);
+      const token = res?.data?.token || res?.token; // handle either shape
+      if (!token) throw new Error("Registration failed.");
 
-    if (!isLongEnough || !hasNumber || !noSpaces) {
-      setErrorMessage(
-        "Password must be at least 8 characters, include a number, and contain no spaces."
-      );
-      return;
+      // instant UI update
+      setToken(token);
+      localStorage.setItem("token", token);
+
+      // derive username (API may or may not return it)
+      const me = await fetchUserData(token).catch(() => null);
+      const uname =
+        me?.username ||
+        me?.data?.username ||
+        res?.data?.user?.username ||
+        usernameInput;
+
+      setUsername(uname);
+      localStorage.setItem("username", uname);
+
+      nav("/posts");
+    } catch (e2) {
+      console.error(e2);
+      setErr(e2.message || "Registration failed.");
     }
-
-    const register = await registerUser(username, password);
-
-    if (!register?.success) {
-      setErrorMessage(register?.error?.message || "Registration failed");
-      return;
-    }
-
-    setToken(register.data.token);
-    setUsername("");
-    setPassword("");
-    nav("/posts");
   };
 
   return (
-    <>
-      <h1 style={{ textAlign: "center" }}>Register</h1>
-
-      <form
-        onSubmit={handleSubmit}
-        style={{
-          maxWidth: "400px",
-          margin: "0 auto",
-          display: "flex",
-          flexDirection: "column",
-          gap: "0.75rem",
-        }}
-      >
-        <input
-          placeholder="username"
-          autoComplete="username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-
-        <div style={{ position: "relative" }}>
-          <input
-            placeholder="password"
-            type={showPassword ? "text" : "password"}
-            autoComplete="new-password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            style={{ width: "100%", paddingRight: "2rem" }}
-          />
-          <span
-            onClick={() => setShowPassword((prev) => !prev)}
-            style={{
-              position: "absolute",
-              right: "0.5rem",
-              top: "50%",
-              transform: "translateY(-50%)",
-              cursor: "pointer",
-              fontSize: "1.1em",
-              userSelect: "none",
-            }}
-            title={showPassword ? "Hide password" : "Show password"}
-          >
-            {showPassword ? "🙈" : "👁️"}
-          </span>
-        </div>
-
-        <button type="submit">Submit</button>
-      </form>
-
-      {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
-    </>
+    <form
+      onSubmit={onSubmit}
+      style={{ display: "grid", gap: ".5rem", maxWidth: 480 }}
+    >
+      <input
+        placeholder="username"
+        value={usernameInput}
+        onChange={(e) => setUsernameInput(e.target.value)}
+        autoFocus
+      />
+      <input
+        placeholder="password"
+        type="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      <button type="submit">Register</button>
+      {err && <p style={{ color: "crimson", margin: 0 }}>{err}</p>}
+    </form>
   );
 }
