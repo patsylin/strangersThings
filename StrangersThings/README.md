@@ -1,8 +1,88 @@
-# React + Vite
+# Strangers Things
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+🛍️ A not-so-spooky online marketplace!
+Strangers Things is a front-end React app that mimics Craigslist functionality, built using the Stranger's Things API from Fullstack Academy. The name is a play on _Stranger Things_ — but instead of monsters and Demogorgons, you'll find posts, messages, and tokens!
 
-Currently, two official plugins are available:
+## 🌟 Purpose
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+This project was created to build comfort with React, API integration, token-based authentication, and conditional rendering—while having a little fun with naming along the way.
+
+## 🛠️ Tech Stack
+
+- **Frontend:** React
+- **Routing:** React Router DOM
+- **Styling:** CSS
+- **Auth:** Token-based authentication
+- **API:** Stranger's Things REST API
+
+## ✨ Features
+
+- 📝 Browse all marketplace listings
+- 🔐 Register and log in with a token-based system
+- 🛍️ Create, edit, and delete your own posts (if logged in)
+- 💬 Send messages to other users via their posts
+- 🚦 Conditional UI based on login state
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js
+- A code editor like VS Code
+
+### Installation
+
+1. Clone the repo:
+
+   ```bash
+   git clone https://github.com/patsylin/strangersThings.git
+   cd strangersThings
+   ```
+
+2. Install dependencies:
+
+   ```bash
+   npm install
+   ```
+
+3. Start the app:
+
+   ```bash
+   npm run dev
+   ```
+
+4. Open your browser:
+   ```
+   http://localhost:5173
+   ```
+
+## 📸 Screenshots
+
+### 🏠 Landing Page
+
+![Landing](screenshots/landing.png)
+
+### 🔐 Login Page
+
+![Login](screenshots/login.png)
+
+### 📬 Messages Inbox
+
+![Messages](screenshots/messages.png)
+
+### 📋 Posts List
+
+![Posts](screenshots/posts.png)
+
+## 🤝 Contributors
+
+- **Patsy Lin** – Frontend Developer
+  [GitHub](https://github.com/patsylin) | [LinkedIn](https://linkedin.com/in/patsy-lin)
+
+## 📬 Contact
+
+📧 pohutchison@gmail.com
+
+---
+
+**Note:** Built as part of the Grace Hopper Program at Fullstack Academy.
