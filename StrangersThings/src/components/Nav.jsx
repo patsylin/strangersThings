@@ -1,65 +1,127 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import "./Nav.css";
 
-export default function Nav({ token, setToken, messageCount = 0, username }) {
-  const { pathname } = useLocation();
+export default function Nav({ token, setToken, messageCount, username }) {
+  const location = useLocation();
   const nav = useNavigate();
 
   const handleLogout = () => {
-    setToken?.(null);
+    setToken(null);
     localStorage.removeItem("token");
     localStorage.removeItem("username");
     nav("/posts");
   };
 
   return (
-    <header className="site-header">
-      <div className="site-header__inner">
-        {/* left */}
+    <header className="nav-wrapper">
+      <div className="nav-inner">
+        {/* Left side */}
         <Link
           to="/posts"
-          className={`brand ${pathname.startsWith("/posts") ? "active" : ""}`}
+          className={location.pathname === "/posts" ? "active" : ""}
         >
           Strangers' Things
         </Link>
 
-        {/* right */}
-        <nav className="top-links">
+        {/* Right side */}
+        <div className="nav-links">
           {!token ? (
             <>
               <Link
                 to="/login"
-                className={pathname === "/login" ? "active" : ""}
+                className={location.pathname === "/login" ? "active" : ""}
               >
-                login
+                Login
               </Link>
               <Link
                 to="/register"
-                className={pathname === "/register" ? "active" : ""}
+                className={location.pathname === "/register" ? "active" : ""}
               >
-                register
+                Register
               </Link>
             </>
           ) : (
             <>
-              <span className="hello">
-                {username ? `hi, ${username}` : "hi"}
-              </span>
+              <span>Hello, {username}</span>
               <Link
                 to="/messages"
-                className={pathname === "/messages" ? "active" : ""}
+                className={location.pathname === "/messages" ? "active" : ""}
               >
-                messages{messageCount > 0 ? ` (${messageCount})` : ""}
+                Messages {messageCount > 0 && <span>({messageCount})</span>}
               </Link>
-              <button onClick={handleLogout} className="linklike">
-                logout
+              <button onClick={handleLogout} className="logout-btn">
+                Logout
               </button>
             </>
           )}
-        </nav>
+        </div>
       </div>
     </header>
   );
 }
+
+// import { Link, useLocation, useNavigate } from "react-router-dom";
+
+// export default function Nav({ token, setToken, messageCount = 0, username }) {
+//   const { pathname } = useLocation();
+//   const nav = useNavigate();
+
+//   const handleLogout = () => {
+//     setToken?.(null);
+//     localStorage.removeItem("token");
+//     localStorage.removeItem("username");
+//     nav("/posts");
+//   };
+
+//   return (
+//     <header className="site-header">
+//       <div className="site-header__inner">
+//         {/* left */}
+//         <Link
+//           to="/posts"
+//           className={`brand ${pathname.startsWith("/posts") ? "active" : ""}`}
+//         >
+//           Strangers' Things
+//         </Link>
+
+//         {/* right */}
+//         <nav className="top-links">
+//           {!token ? (
+//             <>
+//               <Link
+//                 to="/login"
+//                 className={pathname === "/login" ? "active" : ""}
+//               >
+//                 login
+//               </Link>
+//               <Link
+//                 to="/register"
+//                 className={pathname === "/register" ? "active" : ""}
+//               >
+//                 register
+//               </Link>
+//             </>
+//           ) : (
+//             <>
+//               <span className="hello">
+//                 {username ? `hi, ${username}` : "hi"}
+//               </span>
+//               <Link
+//                 to="/messages"
+//                 className={pathname === "/messages" ? "active" : ""}
+//               >
+//                 messages{messageCount > 0 ? ` (${messageCount})` : ""}
+//               </Link>
+//               <button onClick={handleLogout} className="linklike">
+//                 logout
+//               </button>
+//             </>
+//           )}
+//         </nav>
+//       </div>
+//     </header>
+//   );
+// }
 
 // import { Link, useLocation, useNavigate } from "react-router-dom";
 // import "./Nav.css";
