@@ -1,4 +1,4 @@
-# Strangers Things
+Change? # Strangers Things
 
 🛍️ A not-so-spooky online marketplace!
 Strangers Things is a front-end React app that mimics Craigslist functionality, built using the Stranger's Things API from Fullstack Academy. The name is a play on _Stranger Things_ — but instead of monsters and Demogorgons, you'll find posts, messages, and tokens!
