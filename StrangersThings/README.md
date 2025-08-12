@@ -60,19 +60,19 @@ This project was created to build comfort with React, API integration, token-bas
 
 ### 🏠 Landing Page
 
-![Landing](screenshots/landing.png)
+![Landing](StrangersThings/screenshots/landing.png)
 
 ### 🔐 Login Page
 
-![Login](screenshots/login.png)
+![Login](StrangersThings/screenshots/login.png)
 
 ### 📬 Messages Inbox
 
-![Messages](screenshots/messages.png)
+![Messages](StrangersThings/screenshots/messages.png)
 
 ### 📋 Posts List
 
-![Posts](screenshots/posts.png)
+![Posts](StrangersThings/screenshots/posts.png)
 
 ## 🤝 Contributors
 
