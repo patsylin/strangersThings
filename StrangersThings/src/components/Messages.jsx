@@ -1,18 +1,31 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function Messages({ token }) {
-  const [messages, setMessages] = useState([]);
-  const [username, setUsername] = useState("");
+export default function Messages({
+  token,
+  messages: messagesProp = [],
+  username: usernameProp = "",
+}) {
+  const [fetchedMessages, setFetchedMessages] = useState([]);
+  const [fetchedUsername, setFetchedUsername] = useState("");
+  const [loading, setLoading] = useState(!!token);
+  const [error, setError] = useState("");
   const [showReplyForm, setShowReplyForm] = useState({});
   const [replyContent, setReplyContent] = useState({});
   const [successMessage, setSuccessMessage] = useState("");
   const nav = useNavigate();
 
   useEffect(() => {
-    const fetchMessages = async () => {
+    document.title = "Messages — Strangers' Things";
+  }, []);
+
+  useEffect(() => {
+    if (!token) return;
+    (async () => {
       try {
-        const response = await fetch(
+        setLoading(true);
+        setError("");
+        const res = await fetch(
           "https://strangers-things.herokuapp.com/api/2306-GHP-ET-WEB-FT/users/me",
           {
             headers: {
@@ -21,34 +34,40 @@ export default function Messages({ token }) {
             },
           }
         );
-        const result = await response.json();
-
-        if (result?.data?.messages) {
-          setMessages(result.data.messages);
-          setUsername(result.data.username);
+        const result = await res.json();
+        if (result?.data) {
+          setFetchedMessages(result.data.messages || []);
+          setFetchedUsername(result.data.username || "");
         } else {
-          console.error("No messages found in response", result);
+          setError("Could not load messages.");
         }
-      } catch (err) {
-        console.error("Error fetching messages:", err);
+      } catch (e) {
+        console.error(e);
+        setError("Could not load messages.");
+      } finally {
+        setLoading(false);
       }
-    };
-
-    if (token) {
-      fetchMessages();
-    }
+    })();
   }, [token]);
 
-  const handleToggleReply = (messageId) => {
-    setShowReplyForm((prev) => ({
-      ...prev,
-      [messageId]: !prev[messageId], // toggle true/false
-    }));
-  };
+  const username = token ? fetchedUsername : usernameProp;
+  const allMessages = token ? fetchedMessages : messagesProp;
+
+  const receivedMessages = useMemo(() => {
+    return (allMessages || []).filter((m) => {
+      if (typeof m.fromUser === "boolean") return !m.fromUser;
+      if (m.fromUser?.username) return m.fromUser.username !== username;
+      return true;
+    });
+  }, [allMessages, username]);
+
+  const handleToggleReply = (id) =>
+    setShowReplyForm((prev) => ({ ...prev, [id]: !prev[id] }));
 
   const handleSendReply = async (postId, messageId) => {
+    if (!token) return nav("/login");
     try {
-      const response = await fetch(
+      const res = await fetch(
         `https://strangers-things.herokuapp.com/api/2306-GHP-ET-WEB-FT/posts/${postId}/messages`,
         {
           method: "POST",
@@ -57,115 +76,307 @@ export default function Messages({ token }) {
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
-            message: {
-              content: replyContent[messageId],
-            },
+            message: { content: replyContent[messageId] },
           }),
         }
       );
-      const result = await response.json();
+      const result = await res.json();
       if (result?.success) {
         setSuccessMessage("Reply sent!");
-        setShowReplyForm((prev) => ({ ...prev, [messageId]: false }));
-        setReplyContent((prev) => ({ ...prev, [messageId]: "" }));
-        setTimeout(() => setSuccessMessage(""), 3000);
+        setShowReplyForm((p) => ({ ...p, [messageId]: false }));
+        setReplyContent((p) => ({ ...p, [messageId]: "" }));
+        setTimeout(() => setSuccessMessage(""), 2500);
       } else {
-        console.error("Failed to send reply", result);
+        setError("Failed to send reply.");
       }
-    } catch (err) {
-      console.error("Error sending reply:", err);
+    } catch (e) {
+      console.error(e);
+      setError("Failed to send reply.");
     }
   };
 
-  const filteredMessages = messages.filter(
-    (msg) => msg.fromUser?.username !== username
-  );
-
   return (
-    <div style={{ padding: "2rem" }}>
-      <h1 style={{ fontFamily: "sans-serif", color: "#333" }}>📬 Your Inbox</h1>
-      {successMessage && (
-        <p style={{ color: "green", marginBottom: "1rem" }}>{successMessage}</p>
-      )}
-      {filteredMessages.length === 0 ? (
-        <p style={{ color: "#888", fontStyle: "italic" }}>
-          No messages from other users yet.
-        </p>
-      ) : (
-        filteredMessages.map((message) => (
-          <div
-            key={message._id}
-            style={{
-              border: "1px solid #ccc",
-              borderRadius: "8px",
-              padding: "1rem",
-              marginBottom: "1rem",
-              backgroundColor: "#f9f9f9",
-            }}
-          >
-            <p>
-              <strong>From:</strong> {message.fromUser?.username}
-            </p>
-            <p>
-              <strong>Post:</strong> {message.post?.title}
-            </p>
-            <p>
-              <strong>Message:</strong> {message.content}
-            </p>
+    <div style={{ maxWidth: 960, margin: "0 auto", padding: "1rem" }}>
+      <h1 style={{ margin: 0, fontSize: "1.1rem" }}>Your Inbox</h1>
 
-            <button
-              onClick={() => handleToggleReply(message._id)}
+      {loading && (
+        <p style={{ color: "#555", marginTop: ".75rem" }}>Loading messages…</p>
+      )}
+      {error && !loading && (
+        <p style={{ color: "crimson", marginTop: ".75rem" }}>{error}</p>
+      )}
+      {successMessage && !loading && (
+        <p style={{ color: "green", marginTop: ".75rem" }}>{successMessage}</p>
+      )}
+
+      {!loading && !error && (
+        <>
+          {receivedMessages.length === 0 ? (
+            <p
               style={{
-                marginTop: "0.5rem",
-                backgroundColor: "#ff7aa2",
-                color: "white",
-                border: "none",
-                padding: "0.5rem 1rem",
-                borderRadius: "6px",
-                cursor: "pointer",
+                color: "#555",
+                fontStyle: "italic",
+                marginTop: ".75rem",
               }}
             >
-              {showReplyForm[message._id] ? "Cancel" : "Reply ✍️"}
-            </button>
+              No messages from other users yet.
+            </p>
+          ) : (
+            receivedMessages.map((message) => (
+              <div
+                key={message._id}
+                style={{
+                  border: "1px solid #ccc",
+                  padding: "1rem",
+                  background: "#fff",
+                  marginTop: ".75rem",
+                }}
+              >
+                <p style={{ margin: 0 }}>
+                  <strong>From:</strong>{" "}
+                  {message.fromUser?.username || "Someone"}
+                </p>
+                <p style={{ margin: ".25rem 0 0" }}>
+                  <strong>Post:</strong>{" "}
+                  {message.post?.title || "(deleted post)"}
+                </p>
+                <p style={{ margin: ".5rem 0 0", whiteSpace: "pre-wrap" }}>
+                  <strong>Message:</strong> {message.content}
+                </p>
 
-            {showReplyForm[message._id] && (
-              <div style={{ marginTop: "1rem" }}>
-                <textarea
-                  rows={3}
-                  placeholder="Write your reply..."
-                  value={replyContent[message._id] || ""}
-                  onChange={(e) =>
-                    setReplyContent((prev) => ({
-                      ...prev,
-                      [message._id]: e.target.value,
-                    }))
-                  }
-                  style={{
-                    width: "100%",
-                    padding: "0.5rem",
-                    borderRadius: "6px",
-                    border: "1px solid #ccc",
-                    marginBottom: "0.5rem",
-                  }}
-                />
                 <button
-                  onClick={() => handleSendReply(message.post._id, message._id)}
+                  onClick={() => handleToggleReply(message._id)}
                   style={{
-                    backgroundColor: "#4CAF50",
-                    color: "white",
-                    border: "none",
-                    padding: "0.5rem 1rem",
-                    borderRadius: "6px",
+                    marginTop: ".6rem",
+                    background: "#fff",
+                    border: "1px solid #ccc",
+                    padding: ".4rem .7rem",
                     cursor: "pointer",
                   }}
                 >
-                  Send Reply 💌
+                  {showReplyForm[message._id] ? "Cancel" : "Reply"}
                 </button>
+
+                {showReplyForm[message._id] && (
+                  <div style={{ marginTop: ".6rem" }}>
+                    <textarea
+                      rows={3}
+                      placeholder="Write your reply..."
+                      value={replyContent[message._id] || ""}
+                      onChange={(e) =>
+                        setReplyContent((prev) => ({
+                          ...prev,
+                          [message._id]: e.target.value,
+                        }))
+                      }
+                      style={{
+                        width: "100%",
+                        padding: ".5rem .6rem",
+                        border: "1px solid #ccc",
+                        resize: "vertical",
+                      }}
+                    />
+                    <button
+                      onClick={() =>
+                        handleSendReply(message.post._id, message._id)
+                      }
+                      style={{
+                        marginTop: ".5rem",
+                        background: "#fff",
+                        border: "1px solid #ccc",
+                        padding: ".4rem .7rem",
+                        cursor: "pointer",
+                      }}
+                    >
+                      Send Reply
+                    </button>
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-        ))
+            ))
+          )}
+        </>
       )}
     </div>
   );
 }
+
+// import { useEffect, useState, useMemo } from "react";
+// import { useNavigate } from "react-router-dom";
+
+// export default function Messages({
+//   token,
+//   messages: messagesProp = [],
+//   username: usernameProp = "",
+// }) {
+//   const [fetchedMessages, setFetchedMessages] = useState([]);
+//   const [fetchedUsername, setFetchedUsername] = useState("");
+//   const [showReplyForm, setShowReplyForm] = useState({});
+//   const [replyContent, setReplyContent] = useState({});
+//   const [successMessage, setSuccessMessage] = useState("");
+//   const nav = useNavigate();
+
+//   // Fetch only when token is provided
+//   useEffect(() => {
+//     if (!token) return;
+//     (async () => {
+//       try {
+//         const response = await fetch(
+//           "https://strangers-things.herokuapp.com/api/2306-GHP-ET-WEB-FT/users/me",
+//           {
+//             headers: {
+//               "Content-Type": "application/json",
+//               Authorization: `Bearer ${token}`,
+//             },
+//           }
+//         );
+//         const result = await response.json();
+//         if (result?.data) {
+//           setFetchedMessages(result.data.messages || []);
+//           setFetchedUsername(result.data.username || "");
+//         }
+//       } catch (err) {
+//         console.error("Error fetching messages:", err);
+//       }
+//     })();
+//   }, [token]);
+
+//   // Choose source of truth (fetched if token, else props)
+//   const username = token ? fetchedUsername : usernameProp;
+//   const allMessages = token ? fetchedMessages : messagesProp;
+
+//   // Received-only filter (exclude messages you sent)
+//   const receivedMessages = useMemo(() => {
+//     return (allMessages || []).filter((m) => {
+//       // API varies: m.fromUser can be boolean or object
+//       if (typeof m.fromUser === "boolean") return !m.fromUser; // false means received
+//       if (m.fromUser && m.fromUser.username)
+//         return m.fromUser.username !== username;
+//       return true; // if unsure, treat as received
+//     });
+//   }, [allMessages, username]);
+
+//   const handleToggleReply = (messageId) =>
+//     setShowReplyForm((prev) => ({ ...prev, [messageId]: !prev[messageId] }));
+
+//   const handleSendReply = async (postId, messageId) => {
+//     if (!token) {
+//       nav("/login");
+//       return;
+//     }
+//     try {
+//       const response = await fetch(
+//         `https://strangers-things.herokuapp.com/api/2306-GHP-ET-WEB-FT/posts/${postId}/messages`,
+//         {
+//           method: "POST",
+//           headers: {
+//             "Content-Type": "application/json",
+//             Authorization: `Bearer ${token}`,
+//           },
+//           body: JSON.stringify({
+//             message: { content: replyContent[messageId] },
+//           }),
+//         }
+//       );
+//       const result = await response.json();
+//       if (result?.success) {
+//         setSuccessMessage("Reply sent!");
+//         setShowReplyForm((prev) => ({ ...prev, [messageId]: false }));
+//         setReplyContent((prev) => ({ ...prev, [messageId]: "" }));
+//         setTimeout(() => setSuccessMessage(""), 3000);
+//       } else {
+//         console.error("Failed to send reply", result);
+//       }
+//     } catch (err) {
+//       console.error("Error sending reply:", err);
+//     }
+//   };
+
+//   return (
+//     <div style={{ maxWidth: 960, margin: "0 auto", padding: "1rem" }}>
+//       {/* Heading without emoji; inherits site font */}
+//       <h1 style={{ margin: "0 0 0.75rem 0", fontSize: "1.1rem" }}>
+//         Your Inbox
+//       </h1>
+
+//       {successMessage && (
+//         <p style={{ color: "green", marginBottom: "1rem" }}>{successMessage}</p>
+//       )}
+
+//       {receivedMessages.length === 0 ? (
+//         <p style={{ color: "#555", fontStyle: "italic" }}>
+//           No messages from other users yet.
+//         </p>
+//       ) : (
+//         receivedMessages.map((message) => (
+//           <div
+//             key={message._id}
+//             style={{
+//               border: "1px solid #ccc",
+//               padding: "1rem",
+//               background: "#fff",
+//               marginBottom: ".75rem",
+//             }}
+//           >
+//             <p style={{ margin: 0 }}>
+//               <strong>From:</strong> {message.fromUser?.username || "Someone"}
+//             </p>
+//             <p style={{ margin: ".25rem 0 0" }}>
+//               <strong>Post:</strong> {message.post?.title || "(deleted post)"}
+//             </p>
+//             <p style={{ margin: ".5rem 0 0", whiteSpace: "pre-wrap" }}>
+//               <strong>Message:</strong> {message.content}
+//             </p>
+
+//             <button
+//               onClick={() => handleToggleReply(message._id)}
+//               style={{
+//                 marginTop: ".6rem",
+//                 background: "#fff",
+//                 border: "1px solid #ccc",
+//                 padding: ".4rem .7rem",
+//                 cursor: "pointer",
+//               }}
+//             >
+//               {showReplyForm[message._id] ? "Cancel" : "Reply"}
+//             </button>
+
+//             {showReplyForm[message._id] && (
+//               <div style={{ marginTop: ".6rem" }}>
+//                 <textarea
+//                   rows={3}
+//                   placeholder="Write your reply..."
+//                   value={replyContent[message._id] || ""}
+//                   onChange={(e) =>
+//                     setReplyContent((prev) => ({
+//                       ...prev,
+//                       [message._id]: e.target.value,
+//                     }))
+//                   }
+//                   style={{
+//                     width: "100%",
+//                     padding: ".5rem .6rem",
+//                     border: "1px solid #ccc",
+//                     resize: "vertical",
+//                   }}
+//                 />
+//                 <button
+//                   onClick={() => handleSendReply(message.post._id, message._id)}
+//                   style={{
+//                     marginTop: ".5rem",
+//                     background: "#fff",
+//                     border: "1px solid #ccc",
+//                     padding: ".4rem .7rem",
+//                     cursor: "pointer",
+//                   }}
+//                 >
+//                   Send Reply
+//                 </button>
+//               </div>
+//             )}
+//           </div>
+//         ))
+//       )}
+//     </div>
+//   );
+// }

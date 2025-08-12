@@ -7,16 +7,16 @@
 .nav-inner {
   max-width: 960px;
   margin: 0 auto;
-  padding: 8px 16px;           /* <- 1rem side padding to align with boxes */
+  padding: 8px 16px; /* <- 1rem side padding to align with boxes */
   display: flex;
   justify-content: space-between;
-  align-items: center;         /* one line */
-  border-bottom: 1px solid #ccc;  /* the line that matches the boxes */
+  align-items: center; /* one line */
+  border-bottom: 1px solid #ccc; /* the line that matches the boxes */
   box-sizing: border-box;
-  white-space: nowrap;         /* prevent wrap */
+  white-space: nowrap; /* prevent wrap */
   gap: 12px;
-  font-family: Arial, Helvetica, sans-serif;  /* Craigslist vibe */
-  font-size: 14px;             /* smaller links */
+  font-family: Arial, Helvetica, sans-serif; /* Craigslist vibe */
+  font-size: 14px; /* smaller links */
   line-height: 1.2;
 }
 
@@ -24,10 +24,10 @@
 .nav-inner > a {
   text-decoration: none;
   color: #000;
-  font-weight: 700;            /* bold but not huge */
-  font-size: 16px;             /* slightly larger than links */
+  font-weight: 700; /* bold but not huge */
+  font-size: 16px; /* slightly larger than links */
   letter-spacing: 0.2px;
-  overflow: hidden;            /* safety if super long text */
+  overflow: hidden; /* safety if super long text */
   text-overflow: ellipsis;
 }
 
@@ -47,6 +47,7 @@
   border: none;
   padding: 0;
   cursor: pointer;
+  background-image: none !important; /* ensure no mailbox icon sprites */
 }
 
 /* subtle active state */
@@ -63,55 +64,24 @@
 
 /* tiny screens: keep compact */
 @media (max-width: 480px) {
-  .nav-inner { padding: 8px 12px; font-size: 13.5px; }
-  .nav-inner > a { font-size: 15px; }
-  .nav-links { gap: 10px; }
-}
-/*
-/* nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.5rem 1rem;
-  background-color: white;
-  border-bottom: 1px solid #ccc;
-  font-size: 1rem;
-  font-family: sans-serif;
+  .nav-inner {
+    padding: 8px 12px;
+    font-size: 13.5px;
+  }
+  .nav-inner > a {
+    font-size: 15px;
+  }
+  .nav-links {
+    gap: 10px;
+  }
 }
 
-.site-title {
-  font-weight: bold;
-  font-size: 1.25rem;
+@media (max-width: 360px) {
+  .nav-inner {
+    font-size: 13px;
+    padding: 8px 10px;
+  }
+  .nav-links {
+    gap: 8px;
+  }
 }
-
-.nav-links {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-}
-
-.left-nav,
-.right-nav {
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-}
-
-.nav-links a {
-  text-decoration: underline;
-  color: #0066cc;
-}
-
-.nav-links a:hover {
-  color: darkblue;
-}
-
-body {
-  flex-direction: column;
-  min-height: 100vh;
-  background-color: #f0f0f0;
-  color: #333;
-  font-family: Arial, sans-serif;
-  padding: 0 1rem;
-} */ */
