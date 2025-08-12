@@ -1,4 +1,71 @@
-nav {
+/* keeps the thin line matching your post boxes */
+.site-header {
+  border-bottom: 1px solid #ccc;
+  background: #fff;
+}
+
+/* aligns with your content column */
+.site-header__inner {
+  max-width: 960px; /* match PostsList container */
+  margin: 0 auto;
+  padding: 8px 12px; /* small, Craigslisty padding */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* brand left */
+.brand {
+  font-weight: 700;
+  font-size: 20px;
+  text-decoration: none;
+  color: #000;
+}
+
+/* right-side links */
+.top-links {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+.top-links a,
+.linklike {
+  text-decoration: none;
+  color: #000;
+  font: inherit;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+/* subtle active state like Craigslist (underline) */
+.top-links a.active,
+.brand.active {
+  text-decoration: underline;
+}
+
+/* small, low-contrast greeting */
+.hello {
+  color: #555;
+  font-size: 14px;
+}
+
+/* mobile: keep it tight but readable */
+@media (max-width: 480px) {
+  .site-header__inner {
+    padding: 8px;
+  }
+  .brand {
+    font-size: 18px;
+  }
+  .top-links {
+    gap: 10px;
+  }
+}
+
+/* nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -44,4 +111,4 @@ body {
   color: #333;
   font-family: Arial, sans-serif;
   padding: 0 1rem;
-}
+} */
