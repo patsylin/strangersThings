@@ -1,29 +1,22 @@
 import { useState, useEffect } from "react";
-import {
-  Route,
-  Routes,
-  Navigate,
-  useLocation,
-  BrowserRouter,
-} from "react-router-dom";
+import { Route, Routes, Navigate, useLocation } from "react-router-dom";
 import Register from "./components/Register";
 import Login from "./components/Login";
 import PostsList from "./components/PostsList";
 import PostCard from "./components/PostCard";
 import Messages from "./components/Messages";
 import Nav from "./components/Nav";
-import Landing from "./components/Landing"; // NEW
+import Landing from "./components/Landing";
 import "./App.css";
 import { fetchUserData } from "./fetching";
 
-function AppShell() {
+export default function App() {
   const [token, setToken] = useState(null);
   const [messageCount, setMessageCount] = useState(0);
   const [username, setUsername] = useState("");
   const [messages, setMessages] = useState([]);
   const location = useLocation();
 
-  // Hide Nav on splash page
   const hideNav = location.pathname === "/";
 
   useEffect(() => {
@@ -40,7 +33,7 @@ function AppShell() {
         const data = await fetchUserData(token);
         setUsername(data.username);
         setMessages(data.messages);
-        setMessageCount(data.messages.length || 0);
+        setMessageCount(data.messages?.length || 0);
       } catch (error) {
         console.error("Failed to fetch user data:", error);
       }
@@ -60,12 +53,8 @@ function AppShell() {
       )}
 
       <Routes>
-        {/* Splash */}
         <Route path="/" element={<Landing />} />
-
-        {/* App home */}
         <Route path="/posts" element={<PostsList token={token} />} />
-
         <Route
           path="/register"
           element={<Register setToken={setToken} setUsername={setUsername} />}
@@ -79,18 +68,8 @@ function AppShell() {
           path="/messages"
           element={<Messages messages={messages} username={username} />}
         />
-
-        {/* Fallback */}
         <Route path="*" element={<Navigate to="/posts" replace />} />
       </Routes>
     </>
-  );
-}
-
-export default function App() {
-  return (
-    <BrowserRouter>
-      <AppShell />
-    </BrowserRouter>
   );
 }
