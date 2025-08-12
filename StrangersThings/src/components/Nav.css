@@ -1,44 +1,73 @@
+/* keep full-width bg; the thin line will be INSIDE the 960px column */
 .nav-wrapper {
-  border-bottom: 1px solid #ccc; /* matches post box */
   background: #fff;
 }
 
+/* match your PostsList container (max-width: 960; side padding = 1rem) */
 .nav-inner {
-  max-width: 960px; /* aligns with post list */
+  max-width: 960px;
   margin: 0 auto;
-  padding: 0.5rem 1rem;
+  padding: 8px 16px;           /* <- 1rem side padding to align with boxes */
   display: flex;
   justify-content: space-between;
-  align-items: center; /* keeps everything on one line */
-  font-size: inherit; /* keeps your existing size */
-  font-family: inherit; /* keeps your existing font */
+  align-items: center;         /* one line */
+  border-bottom: 1px solid #ccc;  /* the line that matches the boxes */
+  box-sizing: border-box;
+  white-space: nowrap;         /* prevent wrap */
+  gap: 12px;
+  font-family: Arial, Helvetica, sans-serif;  /* Craigslist vibe */
+  font-size: 14px;             /* smaller links */
+  line-height: 1.2;
 }
 
+/* left title link */
+.nav-inner > a {
+  text-decoration: none;
+  color: #000;
+  font-weight: 700;            /* bold but not huge */
+  font-size: 16px;             /* slightly larger than links */
+  letter-spacing: 0.2px;
+  overflow: hidden;            /* safety if super long text */
+  text-overflow: ellipsis;
+}
+
+/* right-side links cluster */
 .nav-links {
   display: flex;
-  gap: 1rem;
+  gap: 14px;
   align-items: center;
 }
 
 .nav-links a,
-.nav-inner a {
+.logout-btn {
   text-decoration: none;
-  color: black;
+  color: #000;
+  font: inherit;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
 }
 
+/* subtle active state */
 .nav-links a.active,
-.nav-inner a.active {
+.nav-inner > a.active {
   text-decoration: underline;
 }
 
-.logout-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  color: black;
+/* quieter greeting */
+.nav-links span {
+  color: #555;
+  font-size: 13px;
 }
 
+/* tiny screens: keep compact */
+@media (max-width: 480px) {
+  .nav-inner { padding: 8px 12px; font-size: 13.5px; }
+  .nav-inner > a { font-size: 15px; }
+  .nav-links { gap: 10px; }
+}
+/*
 /* nav {
   display: flex;
   justify-content: space-between;
@@ -85,4 +114,4 @@ body {
   color: #333;
   font-family: Arial, sans-serif;
   padding: 0 1rem;
-} */
+} */ */
