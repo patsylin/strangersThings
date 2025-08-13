@@ -19,7 +19,7 @@ export default function Nav({ token, setToken, messageCount = 0, username }) {
     <header className="nav-wrapper">
       <div className="nav-inner">
         <Link
-          to={token ? "/posts" : "/"}
+          to="/posts"
           className={currentPath.startsWith("/posts") ? "active" : ""}
           aria-current={currentPath.startsWith("/posts") ? "page" : undefined}
         >

@@ -20,6 +20,21 @@ html, body, #root {
   background: #fff;
 }
 
+
+input[type="text"],
+input[type="password"] {
+  width: 250px;
+  padding: 0.5rem;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+.auth-form input[type="text"],
+.auth-form input[type="password"] {
+  width: 100%;
+  box-sizing: border-box;
+}
+
 /* body,
 input,
 textarea,
