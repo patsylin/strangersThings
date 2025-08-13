@@ -3,7 +3,7 @@ import { useNavigate, useLocation, useParams } from "react-router-dom";
 import { updatePost, deletePost, BASE_URL } from "../fetching";
 
 export default function PostCard({ post: postProp, token }) {
-  const { id: paramId } = useParams(); // for direct URL access
+  const { id: paramId } = useParams();
   const nav = useNavigate();
   const loc = useLocation();
 
@@ -18,7 +18,6 @@ export default function PostCard({ post: postProp, token }) {
   const [willDeliver, setWillDeliver] = useState(false);
   const [message, setMessage] = useState("");
 
-  // Fetch post if missing (direct link or refresh)
   useEffect(() => {
     if (post) return;
     let alive = true;
@@ -31,7 +30,7 @@ export default function PostCard({ post: postProp, token }) {
           (p) => p._id === paramId || p.id === paramId
         );
         if (alive) setPost(found || null);
-      } catch (err) {
+      } catch {
         if (alive) setError("Failed to load post.");
       } finally {
         if (alive) setLoading(false);
@@ -42,7 +41,6 @@ export default function PostCard({ post: postProp, token }) {
     };
   }, [paramId, post]);
 
-  // Keep form fields in sync
   useEffect(() => {
     if (post) {
       setTitle(post.title || "");
@@ -70,63 +68,68 @@ export default function PostCard({ post: postProp, token }) {
 
   return (
     <Fragment>
-      <h1>Update Your Post</h1>
-      <form onSubmit={submitHandler}>
-        <input
-          placeholder="title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-        <input
-          placeholder="description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
-        <input
-          placeholder="price"
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
-        />
-        <input
-          placeholder="location"
-          value={location}
-          onChange={(e) => setLocation(e.target.value)}
-        />
-        <label>
-          Will Deliver?
-          <input
-            type="checkbox"
-            checked={willDeliver}
-            onChange={(e) => setWillDeliver(e.target.checked)}
-          />
-        </label>
-        <button type="submit">Update</button>
-      </form>
+      <h1>{post.title}</h1>
+      <p>{post.description}</p>
+      <p>Price: {post.price}</p>
+      {post.location && <p>Location: {post.location}</p>}
+      <p>Will deliver: {post.willDeliver ? "Yes" : "No"}</p>
 
-      <button
-        onClick={async () => {
-          if (!post?._id) return;
-          const confirmDelete = window.confirm(
-            "Are you sure you want to delete this post?"
-          );
-          if (confirmDelete) {
-            const result = await deletePost(post._id, token);
-            if (result?.success) {
-              alert("Post deleted successfully!");
-              nav("/posts");
-            } else {
-              alert("Failed to delete post.");
-            }
-          }
-        }}
-      >
-        Delete
-      </button>
+      {post.isAuthor ? (
+        <>
+          <form onSubmit={submitHandler} style={{ marginTop: "1rem" }}>
+            <input
+              placeholder="title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
+            <input
+              placeholder="description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+            <input
+              placeholder="price"
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+            />
+            <input
+              placeholder="location"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+            />
+            <label>
+              Will Deliver?
+              <input
+                type="checkbox"
+                checked={willDeliver}
+                onChange={(e) => setWillDeliver(e.target.checked)}
+              />
+            </label>
+            <button type="submit">Update</button>
+          </form>
 
-      <button onClick={() => nav(`/posts`)}>Back</button>
-
-      {/* Messaging form for non-authors */}
-      {post.isAuthor !== true && (
+          <button
+            onClick={async () => {
+              if (!post?._id) return;
+              const confirmDelete = window.confirm(
+                "Are you sure you want to delete this post?"
+              );
+              if (confirmDelete) {
+                const result = await deletePost(post._id, token);
+                if (result?.success) {
+                  alert("Post deleted successfully!");
+                  nav("/posts");
+                } else {
+                  alert("Failed to delete post.");
+                }
+              }
+            }}
+            style={{ marginTop: "0.5rem" }}
+          >
+            Delete
+          </button>
+        </>
+      ) : (
         <>
           <h2>Send a message to the seller:</h2>
           <form
@@ -172,6 +175,10 @@ export default function PostCard({ post: postProp, token }) {
           </form>
         </>
       )}
+
+      <button onClick={() => nav(`/posts`)} style={{ marginTop: "1rem" }}>
+        Back
+      </button>
     </Fragment>
   );
 }
