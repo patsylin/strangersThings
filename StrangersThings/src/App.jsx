@@ -51,7 +51,7 @@ export default function App() {
   }, [token]); // only when auth changes
 
   return (
-    <>
+    <div className="app-shell">
       {!hideNav && (
         <Nav
           token={token}
@@ -73,10 +73,9 @@ export default function App() {
           element={<Login setToken={setToken} setUsername={setUsername} />}
         />
         <Route path="/post/:postId" element={<PostCard token={token} />} />
-        {/* Messages now fetches its own data using token */}
         <Route path="/messages" element={<Messages token={token} />} />
         <Route path="*" element={<Navigate to="/posts" replace />} />
       </Routes>
-    </>
+    </div>
   );
 }
