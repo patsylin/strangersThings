@@ -14,6 +14,7 @@ export default function Landing() {
 
   return (
     <main
+      className="landing-root"
       style={{
         height: "100dvh",
         width: "100dvw",
@@ -33,6 +34,7 @@ export default function Landing() {
           e.key === "Enter" || e.key === " " ? goToApp() : null
         }
         aria-label="Enter Strangers' Things"
+        className="landing-container"
         style={{
           height: "100%",
           width: "100%",
@@ -44,7 +46,6 @@ export default function Landing() {
           position: "relative",
           pointerEvents: leaving ? "none" : "auto",
         }}
-        className="landing-container"
       >
         <img
           src="/monster image.jpg"
@@ -53,11 +54,12 @@ export default function Landing() {
           decoding="async"
           onLoad={() => setReady(true)}
           onError={() => setReady(true)}
+          className="landing-img"
           style={{
             display: "block",
             width: "100%",
             height: "100%",
-            objectFit: "cover",
+            objectFit: "cover", // desktop default
             objectPosition: "center",
             filter: ready ? "blur(0px)" : "blur(8px)",
             transition: "filter 600ms ease-out",
@@ -67,36 +69,35 @@ export default function Landing() {
         />
         {/* Fade overlay */}
         <div
+          className="landing-fade"
           style={{
             position: "absolute",
             inset: 0,
             background:
-              "linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0) 30%, rgba(0,0,0,0) 70%, rgba(0,0,0,0.3) 100%)",
+              "linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0) 30%, rgba(0,0,0,0) 70%, rgba(0,0,0,0.25) 100%)",
             pointerEvents: "none",
           }}
         />
       </div>
-      <style>
-        {`
-          .landing-container {
-            transition: transform 0.4s ease-in-out;
+
+      {/* Scoped styles so nothing leaks */}
+      <style>{`
+        /* Contain (no crop) on small screens */
+        @media (max-width: 768px) {
+          .landing-root .landing-img { object-fit: contain !important; }
+          .landing-root .landing-fade { background: none !important; }
+        }
+
+        /* Hover scale only on devices that support hover */
+        @media (hover: hover) and (pointer: fine) {
+          .landing-root .landing-container {
+            transition: transform 0.35s ease-in-out;
           }
-          .landing-container:hover {
+          .landing-root .landing-container:hover {
             transform: scale(1.02);
           }
-          @media (max-width: 768px) {
-            main img {
-              object-fit: contain !important;
-            }
-            main div[style*="absolute"] {
-              background: none !important; /* no fade on mobile */
-            }
-            .landing-container:hover {
-              transform: scale(1); /* no hover scale on mobile */
-            }
-          }
-        `}
-      </style>
+        }
+      `}</style>
     </main>
   );
 }
