@@ -27,7 +27,7 @@ This project was created to build comfort with React, API integration, token-bas
 
 Experience Strangers’ Things in your browser:
 
-➡➡ [Live Demo on Vercel](https://strangers-things-delta.vercel.app/)
+➡ [Live Demo on Vercel](https://strangers-things-delta.vercel.app/)
 
 ![App Preview](screenshots/posts.png)
 
