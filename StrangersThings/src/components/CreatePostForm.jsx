@@ -23,7 +23,7 @@ export default function CreatePostForm({ setPosts, token }) {
     setTitle("");
     setDescription("");
     setPrice("");
-    setLocation("public"); // ✅ reset back to "public"
+    setLocation(""); //
     setWillDeliver(false);
     requestAnimationFrame(() => {
       titleRef.current?.focus();
