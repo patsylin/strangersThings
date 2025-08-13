@@ -17,11 +17,30 @@ This project was created to build comfort with React, API integration, token-bas
 
 ## ✨ Features
 
-- 📝 Browse all marketplace listings
-- 🔐 Register and log in with a token-based system
-- 🛍️ Create, edit, and delete your own posts (if logged in)
-- 💬 Send messages to other users via their posts
-- 🚦 Conditional UI based on login state
+- 📝 **Browse all marketplace listings** — see every post in the system, even if you’re not logged in.
+- 🔐 **Register and log in** — secure token-based authentication.
+- 🛍️ **Create, edit, and delete your own posts** — manage your listings with ease.
+- 💬 **Send messages to other users** — contact sellers directly from their posts.
+- 🚦 **Dynamic UI** — interface changes automatically based on login state.
+
+## 🚀 Live Demo
+
+Experience Strangers’ Things in your browser:
+[➡ Live Demo on Vercel](https://strangers-things-delta.vercel.app/)
+
+![App Preview](screenshots/preview.png)
+
+You can:
+
+- Browse posts without logging in
+- Register for a new account to create your own posts
+- Send messages to sellers on posts you don’t own
+- Edit or delete only the posts you created
+
+**Demo tips**:
+
+- Use a throwaway username/password if you don’t want to sign up with real info
+- Public API data may include posts from other users
 
 ## 🚀 Getting Started
 
@@ -37,6 +56,7 @@ This project was created to build comfort with React, API integration, token-bas
    ```bash
    git clone https://github.com/patsylin/strangersThings.git
    cd strangersThings
+
    ```
 
 2. Install dependencies:
