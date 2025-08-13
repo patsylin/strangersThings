@@ -2,8 +2,6 @@ import { useNavigate, Link } from "react-router-dom";
 
 export default function Post({ post, token }) {
   const id = post._id || post.id;
-
-  // ✅ only show a real location; hide "[On Request]" or blank
   const rawLoc = (post.location ?? "").trim();
   const showLocation =
     rawLoc &&
@@ -25,6 +23,7 @@ export default function Post({ post, token }) {
       <h4 style={{ margin: 0 }}>
         <Link
           to={`/post/${id}`}
+          state={{ post, token }}
           className="post-link"
           onClick={(e) => e.stopPropagation()}
         >
@@ -35,16 +34,12 @@ export default function Post({ post, token }) {
       {post.price && (
         <p style={{ margin: ".25rem 0 0" }}>Price: {post.price}</p>
       )}
-
-      {/* ✅ use showLocation */}
       {showLocation && (
         <p style={{ margin: ".25rem 0 0" }}>Location: {rawLoc}</p>
       )}
-
       <p style={{ margin: ".5rem 0 0", whiteSpace: "pre-wrap" }}>
         {post.description}
       </p>
-
       {typeof post.willDeliver === "boolean" && (
         <p style={{ margin: ".25rem 0 0" }}>
           Delivery available?: {post.willDeliver ? "Yes" : "No"}
