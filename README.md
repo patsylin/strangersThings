@@ -1,7 +1,7 @@
-# Strangers Things
+change? # Strangers Things
 
-🛍️ A not-so-spooky online marketplace!  
-Strangers Things is a front-end React app that mimics Craigslist functionality, built using the Stranger's Things API from Fullstack Academy. The name is a play on *Stranger Things* — but instead of monsters and Demogorgons, you'll find posts, messages, and tokens!
+🛍️ A not-so-spooky online marketplace!
+Strangers Things is a front-end React app that mimics Craigslist functionality, built using the Stranger's Things API from Fullstack Academy. The name is a play on _Stranger Things_ — but instead of monsters and Demogorgons, you'll find posts, messages, and tokens!
 
 ## 🌟 Purpose
 
@@ -33,43 +33,50 @@ This project was created to build comfort with React, API integration, token-bas
 ### Installation
 
 1. Clone the repo:
-    ```bash
-    git clone https://github.com/patsylin/strangersThings.git
-    cd strangersThings
-    ```
+
+   ```bash
+   git clone https://github.com/patsylin/strangersThings.git
+   cd strangersThings
+   ```
 
 2. Install dependencies:
-    ```bash
-    npm install
-    ```
+
+   ```bash
+   npm install
+   ```
 
 3. Start the app:
-    ```bash
-    npm run dev
-    ```
+
+   ```bash
+   npm run dev
+   ```
 
 4. Open your browser:
-    ```
-    http://localhost:5173
-    ```
+   ```
+   http://localhost:5173
+   ```
+
 ## 📸 Screenshots
 
 ### 🏠 Landing Page
+
 ![Landing](screenshots/landing.png)
 
 ### 🔐 Login Page
+
 ![Login](screenshots/login.png)
 
 ### 📬 Messages Inbox
+
 ![Messages](screenshots/messages.png)
 
 ### 📋 Posts List
-![Posts](screenshots/posts.png)
 
+![Posts](screenshots/posts.png)
 
 ## 🤝 Contributors
 
-- **Patsy Lin** – Frontend Developer  
+- **Patsy Lin** – Frontend Developer
   [GitHub](https://github.com/patsylin) | [LinkedIn](https://linkedin.com/in/patsy-lin)
 
 ## 📬 Contact
@@ -79,5 +86,3 @@ This project was created to build comfort with React, API integration, token-bas
 ---
 
 **Note:** Built as part of the Grace Hopper Program at Fullstack Academy.
-
-
