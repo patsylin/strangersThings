@@ -148,78 +148,90 @@ export default function Messages({
               No messages from other users yet.
             </p>
           ) : (
-            receivedMessages.map((message) => (
-              <div
-                key={message._id}
-                style={{
-                  border: "1px solid #ccc",
-                  padding: "1rem",
-                  background: "#fff",
-                  marginTop: ".75rem",
-                }}
-              >
-                <p style={{ margin: 0 }}>
-                  <strong>From:</strong>{" "}
-                  {message.fromUser?.username || "Someone"}
-                </p>
-                <p style={{ margin: ".25rem 0 0" }}>
-                  <strong>Post:</strong>{" "}
-                  {message.post?.title || "(deleted post)"}
-                </p>
-                <p style={{ margin: ".5rem 0 0", whiteSpace: "pre-wrap" }}>
-                  <strong>Message:</strong> {message.content}
-                </p>
+            receivedMessages.map((message) => {
+              const postId = message?.post?._id;
+              const postTitle = message?.post?.title ?? "(deleted post)";
+              const canReply = Boolean(postId);
 
-                <button
-                  onClick={() => handleToggleReply(message._id)}
+              return (
+                <div
+                  key={message._id}
                   style={{
-                    marginTop: ".6rem",
-                    background: "#fff",
                     border: "1px solid #ccc",
-                    padding: ".4rem .7rem",
-                    cursor: "pointer",
+                    padding: "1rem",
+                    background: "#fff",
+                    marginTop: ".75rem",
                   }}
                 >
-                  {showReplyForm[message._id] ? "Cancel" : "Reply"}
-                </button>
+                  <p style={{ margin: 0 }}>
+                    <strong>From:</strong>{" "}
+                    {message.fromUser?.username || "Someone"}
+                  </p>
+                  <p style={{ margin: ".25rem 0 0" }}>
+                    <strong>Post:</strong> {postTitle}
+                  </p>
+                  <p style={{ margin: ".5rem 0 0", whiteSpace: "pre-wrap" }}>
+                    <strong>Message:</strong> {message.content}
+                  </p>
 
-                {showReplyForm[message._id] && (
-                  <div style={{ marginTop: ".6rem" }}>
-                    <textarea
-                      rows={3}
-                      placeholder="Write your reply..."
-                      value={replyContent[message._id] || ""}
-                      onChange={(e) =>
-                        setReplyContent((prev) => ({
-                          ...prev,
-                          [message._id]: e.target.value,
-                        }))
-                      }
-                      style={{
-                        width: "100%",
-                        padding: ".5rem .6rem",
-                        border: "1px solid #ccc",
-                        resize: "vertical",
-                      }}
-                    />
-                    <button
-                      onClick={() =>
-                        handleSendReply(message.post._id, message._id)
-                      }
-                      style={{
-                        marginTop: ".5rem",
-                        background: "#fff",
-                        border: "1px solid #ccc",
-                        padding: ".4rem .7rem",
-                        cursor: "pointer",
-                      }}
-                    >
-                      Send Reply
-                    </button>
-                  </div>
-                )}
-              </div>
-            ))
+                  <button
+                    onClick={() =>
+                      canReply &&
+                      setShowReplyForm((prev) => ({
+                        ...prev,
+                        [message._id]: !prev[message._id],
+                      }))
+                    }
+                    disabled={!canReply}
+                    title={canReply ? "Reply" : "Original post was removed"}
+                    style={{
+                      marginTop: ".6rem",
+                      background: "#fff",
+                      border: "1px solid #ccc",
+                      padding: ".4rem .7rem",
+                      cursor: canReply ? "pointer" : "not-allowed",
+                      color: canReply ? "#000" : "#777",
+                    }}
+                  >
+                    {showReplyForm[message._id] ? "Cancel" : "Reply"}
+                  </button>
+
+                  {canReply && showReplyForm[message._id] && (
+                    <div style={{ marginTop: ".6rem" }}>
+                      <textarea
+                        rows={3}
+                        placeholder="Write your reply..."
+                        value={replyContent[message._id] || ""}
+                        onChange={(e) =>
+                          setReplyContent((prev) => ({
+                            ...prev,
+                            [message._id]: e.target.value,
+                          }))
+                        }
+                        style={{
+                          width: "100%",
+                          padding: ".5rem .6rem",
+                          border: "1px solid #ccc",
+                          resize: "vertical",
+                        }}
+                      />
+                      <button
+                        onClick={() => handleSendReply(postId, message._id)}
+                        style={{
+                          marginTop: ".5rem",
+                          background: "#fff",
+                          border: "1px solid #ccc",
+                          padding: ".4rem .7rem",
+                          cursor: "pointer",
+                        }}
+                      >
+                        Send Reply
+                      </button>
+                    </div>
+                  )}
+                </div>
+              );
+            })
           )}
         </>
       )}
