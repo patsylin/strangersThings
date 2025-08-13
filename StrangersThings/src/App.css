@@ -13,3 +13,29 @@ textarea:focus {
   outline: 2px solid #00e;
   outline-offset: 2px;
 }
+
+html,
+body,
+#root {
+  height: 100%;
+}
+body {
+  margin: 0;
+  background: #000;
+}
+
+/* body,
+input,
+textarea,
+button {
+  color: #fff;
+  font-size: 16px;
+} */ */
+/* button, input, textarea {
+  font-family: inherit;
+  font-size: inherit;
+}
+button {
+  background: #333;
+  border: none;
+  color: #fff;                                        } */

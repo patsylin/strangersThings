@@ -33,9 +33,11 @@ export default function Landing() {
           e.key === "Enter" || e.key === " " ? goToApp() : null
         }
         aria-label="Enter Strangers' Things"
+        className="landing-wrap"
         style={{
-          height: "100%",
-          width: "100%",
+          height: "100dvh",
+          width: "100dvw",
+          overflow: "hidden",
           cursor: "pointer",
           opacity: leaving ? 0 : ready ? 1 : 0,
           transition: "opacity 300ms ease-out",
@@ -49,17 +51,24 @@ export default function Landing() {
           decoding="async"
           onLoad={() => setReady(true)}
           onError={() => setReady(true)}
+          className="landing-img"
           style={{
             display: "block",
             width: "100%",
             height: "100%",
-            objectFit: "contain", // ✅ show the whole image, no crop
+            objectFit: "contain",
             objectPosition: "center",
             filter: ready ? "blur(0px)" : "blur(8px)",
             transition: "filter 600ms ease-out",
           }}
         />
       </div>
+
+      <style>{`
+  /* lock it down so no other CSS can override */
+  .landing-wrap { background:#000; }
+  .landing-img { object-fit: contain !important; }
+`}</style>
     </main>
   );
 }
