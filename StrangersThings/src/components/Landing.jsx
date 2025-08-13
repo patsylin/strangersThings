@@ -35,7 +35,7 @@ export default function Landing() {
       aria-label="Enter Strangers' Things"
     >
       <img
-        src="/monster image.jpg"
+        src="/monster-image.jpg"
         alt="Enter Strangers' Things"
         loading="eager"
         decoding="async"
