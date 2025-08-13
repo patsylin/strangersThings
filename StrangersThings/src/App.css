@@ -1,4 +1,3 @@
-
 a:focus,
 button:focus,
 input:focus,
@@ -7,11 +6,13 @@ textarea:focus {
   outline-offset: 2px;
 }
 
-html, body, #root {
+html,
+body,
+#root {
   height: 100%;
   margin: 0;
   padding: 0;
-  background: #fff;   /* <- was #000, set back to white */
+  background: #fff; /* <- was #000, set back to white */
   color: #000;
 }
 
@@ -19,7 +20,6 @@ html, body, #root {
   min-height: 100vh;
   background: #fff;
 }
-
 
 input[type="text"],
 input[type="password"] {
@@ -34,19 +34,46 @@ input[type="password"] {
   width: 100%;
   box-sizing: border-box;
 }
-
-/* body,
-input,
-textarea,
-button {
-  color: #fff;
-  font-size: 16px;
-} */ */
-/* button, input, textarea {
-  font-family: inherit;
-  font-size: inherit;
+:root {
+  --cl-blue: #0645ad; /* link blue */
+  --cl-purple: #551a8b; /* visited purple */
+  --cl-gray: #e6e6e6; /* light borders */
 }
-button {
-  background: #333;
-  border: none;
-  color: #fff;                                        } */
+
+/* global link look */
+a {
+  color: var(--cl-blue);
+  text-decoration: underline;
+}
+a:visited {
+  color: var(--cl-purple);
+}
+a:hover {
+  text-decoration: underline;
+}
+
+/* title on the left = Craigslist purple */
+.nav-inner > a {
+  color: var(--cl-purple);
+  text-decoration: underline;
+  font-weight: 700;
+}
+
+/* right‑side nav links stay blue */
+.nav-links a {
+  color: var(--cl-blue);
+}
+
+/* optional: thinner gray separators like CL */
+.nav-inner {
+  border-bottom: 1px solid var(--cl-gray);
+}
+
+.post-link {
+  color: var(--cl-blue);
+  text-decoration: underline;
+  font-weight: 600;
+}
+.post-link:visited {
+  color: var(--cl-purple);
+}
