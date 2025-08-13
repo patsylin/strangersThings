@@ -61,7 +61,7 @@ export default function Landing() {
           onError={() => setReady(true)}
           style={{
             display: "block",
-            width: "100%",
+            maxWidth: "100%", // ✅ fixed typo
             height: "auto",
             // blur-in (with tiny delay) while loading
             filter: ready ? "blur(0px)" : "blur(8px)",
